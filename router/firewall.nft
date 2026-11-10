@@ -1,0 +1,27 @@
+#!/usr/sbin/nft -f
+# Energy Grid Telemetry - router ACL (Module C)
+flush ruleset
+
+table inet grid {
+  chain forward {
+    type filter hook forward priority 0; policy drop;
+
+    # replies to connections we already allowed
+    ct state established,related accept
+
+    # SEGMENT 1 (meters) -> SEGMENT 2 (API): TLS API + iperf3 + ping only
+    ip saddr 10.10.1.0/24 ip daddr 10.10.2.10 tcp dport 8443 counter accept comment "meters to API over TLS"
+    ip saddr 10.10.1.0/24 ip daddr 10.10.2.10 tcp dport 5201 counter accept comment "iperf3 throughput tests"
+    ip saddr 10.10.1.0/24 ip daddr 10.10.2.0/24 icmp type echo-request counter accept comment "ping meters to API"
+
+    # SEGMENT 2 (API) -> SEGMENT 3 (DB): only the API may talk to MongoDB
+    ip saddr 10.10.2.10 ip daddr 10.10.3.10 tcp dport 27017 counter accept comment "API to MongoDB"
+    ip saddr 10.10.2.0/24 ip daddr 10.10.3.0/24 icmp type echo-request counter accept comment "ping API to DB"
+
+    # DENY: meters must never reach the database directly
+    ip saddr 10.10.1.0/24 ip daddr 10.10.3.0/24 counter drop comment "DENY meters to DB"
+
+    # anything else falls to policy drop; count it
+    counter comment "other dropped traffic"
+  }
+}

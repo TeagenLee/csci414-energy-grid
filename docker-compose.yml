@@ -1,0 +1,86 @@
+name: grid
+
+networks:
+  meters_net:          # SEGMENT 1 - client / smart-meter zone
+    ipam:
+      config: [{ subnet: 10.10.1.0/24, gateway: 10.10.1.1 }]
+  api_net:             # SEGMENT 2 - service / API zone
+    ipam:
+      config: [{ subnet: 10.10.2.0/24, gateway: 10.10.2.1 }]
+  db_net:              # SEGMENT 3 - data zone
+    ipam:
+      config: [{ subnet: 10.10.3.0/24, gateway: 10.10.3.1 }]
+
+services:
+  router:
+    build: ./router
+    container_name: router
+    hostname: router
+    cap_add: [NET_ADMIN, NET_RAW]
+    sysctls:
+      net.ipv4.ip_forward: "1"
+    volumes:
+      - ./router/firewall.nft:/etc/grid/firewall.nft:ro
+      - ./ops/captures:/captures
+    networks:
+      meters_net: { ipv4_address: 10.10.1.254 }
+      api_net:    { ipv4_address: 10.10.2.254 }
+      db_net:     { ipv4_address: 10.10.3.254 }
+    command: ["sleep", "infinity"]
+
+  db:
+    build: ./db
+    container_name: db
+    hostname: db
+    cap_add: [NET_ADMIN]
+    networks:
+      db_net: { ipv4_address: 10.10.3.10 }
+    volumes:
+      - mongo_data:/data/db
+    command: >
+      sh -c "ip route replace 10.10.1.0/24 via 10.10.3.254 &&
+             ip route replace 10.10.2.0/24 via 10.10.3.254 &&
+             exec docker-entrypoint.sh mongod --bind_ip_all"
+
+  api:
+    build: ./api
+    container_name: api
+    hostname: api
+    cap_add: [NET_ADMIN, NET_RAW]
+    networks:
+      api_net: { ipv4_address: 10.10.2.10 }
+    environment:
+      MONGO_URI: mongodb://10.10.3.10:27017
+    volumes:
+      - ./certs:/certs:ro
+      - ./data:/data:ro
+      - ./ops/logs:/logs
+    depends_on: [db, router]
+    command: >
+      sh -c "ip route replace 10.10.1.0/24 via 10.10.2.254 &&
+             ip route replace 10.10.3.0/24 via 10.10.2.254 &&
+             (iperf3 -s -D) &&
+             exec uvicorn app:app --host 0.0.0.0 --port 8443 --ssl-keyfile /certs/api.key --ssl-certfile /certs/api.crt"
+
+  meter:
+    build: ./meter
+    container_name: meter
+    hostname: meter
+    cap_add: [NET_ADMIN, NET_RAW]
+    networks:
+      meters_net: { ipv4_address: 10.10.1.10 }
+    environment:
+      API_URL: https://10.10.2.10:8443
+      CA_CERT: /certs/api.crt
+    volumes:
+      - ./certs:/certs:ro
+      - ./data:/data:ro
+      - ./ops/results:/results
+    depends_on: [api]
+    command: >
+      sh -c "ip route replace 10.10.2.0/24 via 10.10.1.254 &&
+             ip route replace 10.10.3.0/24 via 10.10.1.254 &&
+             sleep infinity"
+
+volumes:
+  mongo_data:

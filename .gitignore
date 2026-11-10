@@ -1,0 +1,3 @@
+data/
+certs/*.key
+__pycache__/

@@ -1,0 +1,147 @@
+
+################ CONDITION: baseline  20:31:10 ################
+uplink clear
+qdisc noqueue 0: root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+--- RTT (20 pings meter -> api) ---
+20 packets transmitted, 20 received, 0% packet loss, time 3950ms
+rtt min/avg/max/mdev = 0.078/0.094/0.181/0.023 ms
+--- throughput (iperf3 10s meter -> api) ---
+[  5]   0.00-10.00  sec  19.3 GBytes  16.6 Gbits/sec  1493            sender
+[  5]   0.00-10.00  sec  19.3 GBytes  16.6 Gbits/sec                  receiver
+
+iperf Done.
+
+=== BENCH 'baseline' : 5 meters x 20 batches x 50 readings ===
+  time                         20261110_203126
+  label                        baseline
+  requests                     200
+  errors                       0
+  error_rate_pct               0.0
+  readings_sent                5000
+  readings_delivered           5000
+  duration_s                   1.12
+  throughput_readings_per_s    4446.9
+  post_p50_ms                  28.6
+  post_p95_ms                  47.6
+  get_p50_ms                   20.3
+  get_p95_ms                   32.1
+  server_p50_ms                17.4
+  freshness_p50_ms             15.0
+  freshness_p95_ms             30.2
+  detail CSV -> /results/bench_baseline_20261110_203126.csv
+  summary row appended -> /results/summary.csv
+
+################ CONDITION: delay  20:31:26 ################
++ tc qdisc replace dev eth0 root netem delay 100ms 20ms
+qdisc netem 8001: root refcnt 3 limit 1000 delay 100ms  20ms seed 14500587676294424075
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+--- RTT (20 pings meter -> api) ---
+20 packets transmitted, 20 received, 0% packet loss, time 3811ms
+rtt min/avg/max/mdev = 80.862/97.755/120.067/13.030 ms
+--- throughput (iperf3 10s meter -> api) ---
+[  5]   0.00-10.00  sec  1.12 MBytes   943 Kbits/sec    0            sender
+[  5]   0.00-10.11  sec  1.00 MBytes   830 Kbits/sec                  receiver
+
+iperf Done.
+
+=== BENCH 'delay' : 5 meters x 20 batches x 50 readings ===
+  time                         20261110_203147
+  label                        delay
+  requests                     200
+  errors                       0
+  error_rate_pct               0.0
+  readings_sent                5000
+  readings_delivered           5000
+  duration_s                   5.83
+  throughput_readings_per_s    858.0
+  post_p50_ms                  125.0
+  post_p95_ms                  219.4
+  get_p50_ms                   109.5
+  get_p95_ms                   127.6
+  server_p50_ms                25.2
+  freshness_p50_ms             121.3
+  freshness_p95_ms             216.1
+  detail CSV -> /results/bench_delay_20261110_203147.csv
+  summary row appended -> /results/summary.csv
+
+################ CONDITION: loss  20:31:47 ################
++ tc qdisc replace dev eth0 root netem loss 5%
+qdisc netem 8001: root refcnt 3 limit 1000 loss 5% seed 14500587676294424075
+ Sent 2749324 bytes 2334 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+--- RTT (20 pings meter -> api) ---
+20 packets transmitted, 19 received, 5% packet loss, time 3947ms
+rtt min/avg/max/mdev = 0.077/0.092/0.111/0.010 ms
+--- throughput (iperf3 10s meter -> api) ---
+[  5]   0.00-10.00  sec   472 MBytes   396 Mbits/sec  17492            sender
+[  5]   0.00-10.00  sec   470 MBytes   394 Mbits/sec                  receiver
+
+iperf Done.
+
+=== BENCH 'loss' : 5 meters x 20 batches x 50 readings ===
+  time                         20261110_203204
+  label                        loss
+  requests                     200
+  errors                       0
+  error_rate_pct               0.0
+  readings_sent                5000
+  readings_delivered           5000
+  duration_s                   1.57
+  throughput_readings_per_s    3193.4
+  post_p50_ms                  15.0
+  post_p95_ms                  51.4
+  get_p50_ms                   21.6
+  get_p95_ms                   226.8
+  server_p50_ms                9.0
+  freshness_p50_ms             8.3
+  freshness_p95_ms             40.1
+  detail CSV -> /results/bench_loss_20261110_203204.csv
+  summary row appended -> /results/summary.csv
+
+################ CONDITION: throttle  20:32:04 ################
++ tc qdisc replace dev eth0 root netem rate 256kbit
+qdisc netem 8001: root refcnt 3 limit 1000 rate 256Kbit seed 14500587676294424075
+ Sent 519908930 bytes 344601 pkt (dropped 1906, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+--- RTT (20 pings meter -> api) ---
+20 packets transmitted, 20 received, 0% packet loss, time 3811ms
+rtt min/avg/max/mdev = 3.186/3.221/3.420/0.049 ms
+--- throughput (iperf3 10s meter -> api) ---
+[  5]   0.00-10.00  sec   896 KBytes   734 Kbits/sec    0            sender
+[  5]   0.00-15.05  sec   384 KBytes   209 Kbits/sec                  receiver
+
+iperf Done.
+
+=== BENCH 'throttle' : 5 meters x 20 batches x 50 readings ===
+  time                         20261110_203322
+  label                        throttle
+  requests                     200
+  errors                       0
+  error_rate_pct               0.0
+  readings_sent                5000
+  readings_delivered           5000
+  duration_s                   50.69
+  throughput_readings_per_s    98.6
+  post_p50_ms                  1493.7
+  post_p95_ms                  2454.9
+  get_p50_ms                   1022.7
+  get_p95_ms                   1981.0
+  server_p50_ms                483.2
+  freshness_p50_ms             1490.1
+  freshness_p95_ms             2451.1
+  detail CSV -> /results/bench_throttle_20261110_203322.csv
+  summary row appended -> /results/summary.csv
+uplink clear
+qdisc noqueue 0: root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+
+################ SUMMARY ################
+time             label     requests  errors  error_rate_pct  readings_sent  readings_delivered  duration_s  throughput_readings_per_s  post_p50_ms  post_p95_ms  get_p50_ms  get_p95_ms  server_p50_ms  freshness_p50_ms  freshness_p95_ms
+20261110_203126  baseline  200       0       0.0             5000           5000                1.12        4446.9                     28.6         47.6         20.3        32.1        17.4           15.0              30.2
+20261110_203147  delay     200       0       0.0             5000           5000                5.83        858.0                      125.0        219.4        109.5       127.6       25.2           121.3             216.1
+20261110_203204  loss      200       0       0.0             5000           5000                1.57        3193.4                     15.0         51.4         21.6        226.8       9.0            8.3               40.1
+20261110_203322  throttle  200       0       0.0             5000           5000                50.69       98.6                       1493.7       2454.9       1022.7      1981.0      483.2          1490.1            2451.1

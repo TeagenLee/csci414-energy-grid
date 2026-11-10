@@ -1,0 +1,8 @@
+--- RTT (20 pings meter -> api) ---
+20 packets transmitted, 20 received, 0% packet loss, time 3811ms
+rtt min/avg/max/mdev = 3.186/3.221/3.420/0.049 ms
+--- throughput (iperf3 10s meter -> api) ---
+[  5]   0.00-10.00  sec   896 KBytes   734 Kbits/sec    0            sender
+[  5]   0.00-15.05  sec   384 KBytes   209 Kbits/sec                  receiver
+
+iperf Done.

@@ -1,0 +1,5 @@
+time,label,requests,errors,error_rate_pct,readings_sent,readings_delivered,duration_s,throughput_readings_per_s,post_p50_ms,post_p95_ms,get_p50_ms,get_p95_ms,server_p50_ms,freshness_p50_ms,freshness_p95_ms
+20261110_203126,baseline,200,0,0.0,5000,5000,1.12,4446.9,28.6,47.6,20.3,32.1,17.4,15.0,30.2
+20261110_203147,delay,200,0,0.0,5000,5000,5.83,858.0,125.0,219.4,109.5,127.6,25.2,121.3,216.1
+20261110_203204,loss,200,0,0.0,5000,5000,1.57,3193.4,15.0,51.4,21.6,226.8,9.0,8.3,40.1
+20261110_203322,throttle,200,0,0.0,5000,5000,50.69,98.6,1493.7,2454.9,1022.7,1981.0,483.2,1490.1,2451.1
