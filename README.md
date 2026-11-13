@@ -19,13 +19,14 @@ BUILD  →  PROTECT  →  MEASURE  →  RECOVER
 
 ### Report and evidence
 
-- **Final report:** [`docs/CSCI414_Energy_Grid_Final_Report.docx`](docs/CSCI414_Energy_Grid_Final_Report.docx). The numbers and labels below match the report. Its Appendix C indexes the evidence for every claim.
+- **Final report:** [`docs/CSCI414_Energy_Grid_Final_Report.docx`](docs/CSCI414_Energy_Grid_Final_Report.docx). The numbers and labels below match the report. Its Appendix C indexes the evidence for every claim; entries under `docs/report_assets/` refer to report-check files that are summarized in the report but not included in this repository.
 - **Evidence folders:**
   - [`ops/results/`](ops/results/): benchmark CSVs, `summary.csv`, ping and iperf3 output, recovery consoles
   - [`ops/results/evidence/`](ops/results/evidence/): the Nov 12 recovery runs, the secure redeployment and the generation feature
   - [`ops/captures/`](ops/captures/): packet captures from Nov 10
   - [`ops/logs/`](ops/logs/): the API log
-  - [`docs/report_assets/`](docs/report_assets/): the report checks, screenshots and source hashes
+
+The **report checks** set (13 Nov) is recorded in the final report itself: transcripts, screenshots and figures. Its raw transcript files are not included in this repository.
 
 The report draws on three evidence sets and names the set with every result. This README does the same.
 
@@ -123,7 +124,7 @@ cd csci414-energy-grid
 | `api_net` | 10.10.2.0/24 | api 10.10.2.10 | eth1 10.10.2.254 | 10.10.2.1 |
 | `db_net` | 10.10.3.0/24 | db 10.10.3.10 | eth2 10.10.3.254 | 10.10.3.1 |
 
-At startup, each endpoint installs routes to the other two /24 subnets through its local `.254` router address (`docker-compose.yml` lines 41–42, 60–61 and 81–82). The router runs with `net.ipv4.ip_forward=1`. Interface names come from the report checks (`docs/report_assets/interfaces_routes.txt`) and can differ on another host.
+At startup, each endpoint installs routes to the other two /24 subnets through its local `.254` router address (`docker-compose.yml` lines 41–42, 60–61 and 81–82). The router runs with `net.ipv4.ip_forward=1`. Interface names come from the report checks (final report §2) and can differ on another host.
 
 **Verify:**
 
@@ -136,7 +137,7 @@ docker exec meter  traceroute -n -I -m 5 -q 1 -w 1 10.10.2.10
 docker exec meter  timeout 30 traceroute -n -I -m 5 -q 1 -w 1 10.10.3.10
 ```
 
-The traceroutes need `-I` (ICMP) because the firewall forwards ICMP echo from the meter but not UDP probes. In the report checks (13 Nov, 08:02 UTC), the trace to the API completed in two hops through 10.10.1.254. The trace to the database got a reply from 10.10.1.254 at hop 1 and no reply at hops 2–5. Over those two traces, the router's `DENY meters to DB` counter rose from 20 to 24 packets (`docs/report_assets/traceroute_20261113.txt`).
+The traceroutes need `-I` (ICMP) because the firewall forwards ICMP echo from the meter but not UDP probes. In the report checks (13 Nov, 08:02 UTC), the trace to the API completed in two hops through 10.10.1.254. The trace to the database got a reply from 10.10.1.254 at hop 1 and no reply at hops 2–5. Over those two traces, the router's `DENY meters to DB` counter rose from 20 to 24 packets (final report §2).
 
 ---
 
@@ -183,9 +184,6 @@ docker exec meter python meter_sim.py send --meter meter-demo
 # error cases; prints 422, 404, 400, 400
 docker exec meter python meter_sim.py errors
 
-# the report's asserting client (creates, reads, annotates, re-reads, then 6 error cases)
-docker exec -i meter python - < docs/report_assets/report_client.py
-
 # reads over verified TLS
 docker exec meter curl --cacert /certs/api.crt 'https://10.10.2.10:8443/meters/uci-house-1/readings?limit=2'
 docker exec meter curl --cacert /certs/api.crt 'https://10.10.2.10:8443/anomalies?limit=5'
@@ -195,9 +193,9 @@ docker exec meter curl --cacert /certs/api.crt  https://10.10.2.10:8443/stats
 docker exec meter python meter_sim.py generate --meter pv-demo-001 --hour 12
 ```
 
-Every command above writes new records to MongoDB. None of them writes to the evidence folders. `report_client.py` reuses the meter IDs from the report, so a second run adds more records under `report-demo-20261112`.
+Every command above writes new records to MongoDB. None of them writes to the evidence folders.
 
-**Recorded results (report checks, 13 Nov 06:20 UTC):** `docs/report_assets/report_transaction.txt` shows POST 201, GET 200, PATCH 200 and GET 200 with the same ID. It also shows the six error cases: 422, 404, 400, 400, 422 and 400. For generation, `--hour 12`, `9` and `2` returned `generation_kw` 5.000, 3.536 and 0.000 (`generation_*.txt`).
+**Recorded results (report checks, 13 Nov 06:20 UTC; final report §3):** POST 201, GET 200, PATCH 200 and GET 200 with the same ID, plus six error cases returning 422, 404, 400, 400, 422 and 400. For generation, `--hour 12`, `9` and `2` returned `generation_kw` 5.000, 3.536 and 0.000. The Nov 12 generation demo is in `ops/results/evidence/generation_feature_20261112/`.
 
 ---
 
@@ -240,10 +238,11 @@ docker exec meter nc -zvw2 10.10.3.10 27017; echo "nc exit=$?"
 
 **Recorded results:**
 
-- **Report checks, 13 Nov:**
+- **Report checks, 13 Nov (final report §4):**
   - `nc` timed out with exit 1.
-  - The `DENY meters to DB` counter rose from 4 to 6 packets (`firewall_before.txt`, `firewall_after.txt`).
-  - `report_demo.pcap` shows only the meter's SYN and one retransmission (frames 149–150), with no reply.
+  - The `DENY meters to DB` counter rose from 4 to 6 packets.
+  - The capture shows only the meter's SYN and one retransmission (frames 149–150), with no reply.
+- **November 12 Mac set:** `ops/results/evidence/deploy_verify_20261112/` shows the firewall ruleset and before/after healthchecks (ALL PASS, including meter → DB blocked).
 - **November 10 set:** `ops/captures/deny_test.pcap` shows unanswered SYNs to 27017 and unanswered echo requests.
 
 TLS protects what the meter and API say to each other. The ACL decides which conversations can exist at all.
@@ -254,10 +253,10 @@ TLS protects what the meter and API say to each other. The ACL decides which con
 
 | Layer | Where |
 |---|---|
-| Packets: tcpdump on the router's `any` interface, which sees all three segments | `ops/captures/*.pcap` (Nov 10); `docs/report_assets/report_demo.pcap` (report checks) |
+| Packets: tcpdump on the router's `any` interface, which sees all three segments | `ops/captures/*.pcap` (Nov 10); report-check capture in final report §5 |
 | API log: method, path, status, server time | `ops/logs/api.log` |
 | Client: per-request latency and status | `ops/results/bench_*.csv`, `ops/results/watch_failure_*.csv` |
-| Health and recovery consoles | `ops/results/failure_*.txt` (Nov 10), `ops/results/evidence/recovery_20261112/` (Nov 12) |
+| Health and recovery consoles | `ops/results/evidence/recovery_20261112/` and `ops/results/fail_recover_*_run_*.log` (Nov 12) |
 
 To take a new capture during a transaction, use a new name so the committed captures are not overwritten:
 
@@ -270,14 +269,14 @@ sleep 2; docker exec meter python meter_sim.py send --meter meter-demo; wait
 
 **Correlations in the report:**
 
-- **One transaction across both hops (report checks, §5.1):** ObjectId `6af6ac1e1dd9bfba6656b461` connects three records: the client's POST response, the PATCH line in the API log, and the plaintext MongoDB update in frame 55 of `report_demo.pcap`.
+- **One transaction across both hops (report checks, §5.1):** ObjectId `6af6ac1e1dd9bfba6656b461` connects three records: the client's POST response, the PATCH line in the API log, and the plaintext MongoDB update in frame 55 of the report-check capture.
 - **Link failure (November 10 set, §5.2):**
   1. The API-side router interface went down at 20:50:57.789 UTC.
   2. The router sent ICMP Network Unreachable to the meter 0.23 s later (frame 516 of `ops/captures/link_failure.pcap`).
   3. `/health` began failing, and client requests failed at the transport level (status 0) with nothing logged by the API.
   4. After the interface came up, a new handshake completed within about 0.2 s, and the API logged `/health` 200 and a POST 201 within 0.8 s.
 
-  Of 105 watch requests, 100 succeeded. Sources: `ops/results/failure_link.txt`, `docs/report_assets/historical_20261110/`.
+  Of 105 watch requests, 100 succeeded. Sources: `ops/captures/link_failure.pcap`, final report §5.2.
 
 ---
 
@@ -405,7 +404,7 @@ Source: `ops/results/evidence/recovery_20261112/`, report Table 10.
 | Healthcheck before / after; exit status | ALL PASS / ALL PASS; 0 | ALL PASS / ALL PASS; 0 |
 | Post-restoration client request | POST 201, GET 200 | POST 201, GET 200 |
 
-Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The client watch has no retry queue, and readings whose requests failed during the outage were not resent. The top-level `ops/results/watch_failure_*` files are copies of these Nov 12 runs. `ops/results/failure_*.txt` are the consoles from an earlier version of the script on the November 10 host.
+Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The client watch has no retry queue, and readings whose requests failed during the outage were not resent. The top-level `ops/results/watch_failure_*` files are copies of these Nov 12 runs.
 
 ---
 
@@ -415,7 +414,7 @@ Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The cl
 |---|---|---|
 | **1. Baseline** | `./ops/impair.sh clear && ./ops/healthcheck.sh` | `bench_baseline_*.csv`, `net_baseline.txt` (Nov 10) |
 | **2. Congested** | `./ops/experiments.sh` | `bench_{delay,loss,throttle}_*.csv`, `summary.csv` (Nov 10 and Nov 12) |
-| **3. Failure + recovery** | `./ops/fail_recover.sh db` or `./ops/fail_recover.sh link` | `evidence/recovery_20261112/` (Nov 12); `link_failure.pcap` and `failure_link.txt` (Nov 10) |
+| **3. Failure + recovery** | `./ops/fail_recover.sh db` or `./ops/fail_recover.sh link` | `evidence/recovery_20261112/` (Nov 12); `ops/captures/link_failure.pcap` (Nov 10) |
 
 ---
 
@@ -430,12 +429,12 @@ Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The cl
 ├── router/                   # router image + firewall.nft
 ├── certs/                    # api.crt; api.key is generated and git-ignored
 ├── data/                     # UCI dataset, downloaded by deploy.sh (git-ignored)
-├── docs/                     # final report + report_assets/ (report-check evidence)
+├── docs/                     # final report (.docx)
 └── ops/
     ├── *.sh                  # deploy, healthcheck, firewall, impair, experiments, capture, fail_recover
     ├── captures/             # Nov 10 pcaps: normal_txn, deny_test, link_failure
     ├── logs/                 # api.log
-    └── results/              # benchmark CSVs, net_*.txt, failure consoles, evidence/
+    └── results/              # benchmark CSVs, net_*.txt, summary.csv, recovery logs, evidence/
 ```
 
 ---
