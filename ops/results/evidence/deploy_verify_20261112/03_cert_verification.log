@@ -1,0 +1,7 @@
+=== new cert fingerprint ===
+sha256 Fingerprint=FE:CC:70:5A:B8:E9:4D:95:0C:6B:8D:31:00:8B:75:0A:DE:54:56:D8:87:C9:AF:B9:43:54:C0:75:69:4E:98:F2
+subject=CN=grid-api
+notBefore=Nov 12 23:11:10 2026 GMT
+notAfter=Nov 12 23:11:10 2027 GMT
+=== original fingerprint (for comparison, recorded earlier) ===
+sha256 Fingerprint=93:17:38:31:2A:73:2F:4B:DD:6F:C6:FA:89:18:BB:4A:7A:15:5C:3A:C2:10:4F:8D:F5:1A:49:AB:A5:FA:49:B1

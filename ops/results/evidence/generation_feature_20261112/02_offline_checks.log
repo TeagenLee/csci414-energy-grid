@@ -1,0 +1,35 @@
+=== 1. Backward compatibility: existing consumption call shape still validates ===
+  [PASS] old-style payload (no reading_type/generation_kw) validates
+  [PASS] reading_type defaults to consumption
+  [PASS] generation_kw defaults to None
+  [PASS] to_doc() output still has all original fields
+  [PASS] anomaly logic unaffected (2.5kW < 6.0kW threshold)
+=== 2. Generation reading: valid case ===
+  [PASS] generation payload validates
+  [PASS] reading_type is generation
+  [PASS] generation_kw preserved
+  [PASS] to_doc() preserves reading_type
+  [PASS] to_doc() preserves generation_kw
+  [PASS] consumption anomaly logic still keyed on global_active_power, not generation_kw
+=== 3. Validation: generation without generation_kw must fail ===
+  [PASS] generation without generation_kw raises (ValidationError)
+=== 4. Validation: consumption with generation_kw must fail ===
+  [PASS] consumption with generation_kw set raises (ValidationError)
+=== 5. Validation: invalid reading_type value must fail ===
+  [PASS] invalid reading_type raises (ValidationError)
+=== 6. generation_kw negative value must fail (ge=0) ===
+  [PASS] negative generation_kw raises (ValidationError)
+=== 7. Existing required-field validation untouched (negative power still rejected) ===
+  [PASS] negative global_active_power raises (ValidationError)
+=== 8. Simulator: solar_kw model sanity (meter_sim.py, source-inspected) ===
+  [PASS] meter_sim.py parses as valid Python (ast.parse)
+  [PASS] solar_kw function defined
+  [PASS] make_generation_reading function defined
+  [PASS] cmd_generate function defined
+  [PASS] solar_kw(3am) == 0 (before sunrise)
+  [PASS] solar_kw(22) == 0 (after sunset)
+  [PASS] solar_kw(12, noon) is near peak capacity
+  [PASS] solar_kw(9) is between 0 and capacity
+  [PASS] solar_kw is never negative across the day
+
+=== RESULT: ALL CHECKS PASSED ===

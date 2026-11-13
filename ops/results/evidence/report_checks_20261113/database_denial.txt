@@ -1,0 +1,4 @@
+$ docker exec meter nc -zvw2 10.10.3.10 27017
+nc: connect to 10.10.3.10 port 27017 (tcp) timed out: Operation now in progress
+
+SHELL_EXIT=1

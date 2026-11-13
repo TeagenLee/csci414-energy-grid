@@ -1,0 +1,100 @@
+22:51:52.971 seq=   0 OK   status=201 8.3ms 
+22:51:53.472 seq=   1 OK   status=201 5.9ms 
+22:51:53.972 seq=   2 OK   status=201 3.2ms 
+22:51:54.481 seq=   3 OK   status=201 7.2ms 
+22:51:54.980 seq=   4 OK   status=201 5.8ms 
+22:51:55.483 seq=   5 OK   status=201 5.5ms 
+22:51:55.984 seq=   6 OK   status=201 6.0ms 
+22:51:56.484 seq=   7 OK   status=201 3.2ms 
+22:51:56.989 seq=   8 OK   status=201 6.6ms 
+22:51:57.492 seq=   9 OK   status=201 6.9ms 
+22:51:57.992 seq=  10 OK   status=201 5.4ms 
+22:51:58.497 seq=  11 OK   status=201 7.6ms 
+22:51:58.998 seq=  12 OK   status=201 7.5ms 
+22:51:59.499 seq=  13 OK   status=201 5.0ms 
+22:52:00.004 seq=  14 OK   status=201 7.1ms 
+22:52:00.503 seq=  15 OK   status=201 5.6ms 
+22:52:01.007 seq=  16 OK   status=201 6.4ms 
+22:52:01.524 seq=  17 OK   status=201 22.0ms 
+22:52:02.008 seq=  18 OK   status=201 4.7ms 
+22:52:02.510 seq=  19 OK   status=201 5.5ms 
+22:52:06.015 seq=  20 FAIL status=0 3009.5ms ReadTimeout
+22:52:06.015 >>> OUTAGE DETECTED
+22:52:08.024 seq=  21 FAIL status=0 2007.1ms ConnectTimeout
+22:52:10.029 seq=  22 FAIL status=0 2005.0ms ConnectTimeout
+22:52:12.037 seq=  23 FAIL status=0 2006.5ms ConnectTimeout
+22:52:14.043 seq=  24 FAIL status=0 2004.9ms ConnectTimeout
+22:52:16.050 seq=  25 FAIL status=0 2006.2ms ConnectTimeout
+22:52:18.058 seq=  26 FAIL status=0 2005.6ms ConnectTimeout
+22:52:19.100 seq=  27 OK   status=201 1038.6ms 
+22:52:19.100 >>> SERVICE RECOVERED after 13.1s
+22:52:19.103 seq=  28 OK   status=201 2.0ms 
+22:52:19.610 seq=  29 OK   status=201 5.7ms 
+22:52:20.112 seq=  30 OK   status=201 5.7ms 
+22:52:20.616 seq=  31 OK   status=201 4.9ms 
+22:52:21.122 seq=  32 OK   status=201 5.6ms 
+22:52:21.624 seq=  33 OK   status=201 6.1ms 
+22:52:22.124 seq=  34 OK   status=201 5.8ms 
+22:52:22.628 seq=  35 OK   status=201 5.8ms 
+22:52:23.129 seq=  36 OK   status=201 5.6ms 
+22:52:23.635 seq=  37 OK   status=201 7.0ms 
+22:52:24.137 seq=  38 OK   status=201 7.3ms 
+22:52:24.638 seq=  39 OK   status=201 5.1ms 
+22:52:25.144 seq=  40 OK   status=201 7.1ms 
+22:52:25.644 seq=  41 OK   status=201 5.5ms 
+22:52:26.148 seq=  42 OK   status=201 5.5ms 
+22:52:26.650 seq=  43 OK   status=201 5.8ms 
+22:52:27.157 seq=  44 OK   status=201 7.4ms 
+22:52:27.661 seq=  45 OK   status=201 4.7ms 
+22:52:28.170 seq=  46 OK   status=201 11.3ms 
+22:52:28.667 seq=  47 OK   status=201 5.3ms 
+22:52:29.169 seq=  48 OK   status=201 5.2ms 
+22:52:29.670 seq=  49 OK   status=201 5.6ms 
+22:52:30.171 seq=  50 OK   status=201 5.3ms 
+22:52:30.673 seq=  51 OK   status=201 5.9ms 
+22:52:31.174 seq=  52 OK   status=201 5.7ms 
+22:52:31.677 seq=  53 OK   status=201 8.6ms 
+22:52:32.178 seq=  54 OK   status=201 5.2ms 
+22:52:32.680 seq=  55 OK   status=201 4.6ms 
+22:52:33.182 seq=  56 OK   status=201 6.2ms 
+22:52:33.682 seq=  57 OK   status=201 5.7ms 
+22:52:34.186 seq=  58 OK   status=201 5.5ms 
+22:52:34.689 seq=  59 OK   status=201 5.4ms 
+22:52:35.190 seq=  60 OK   status=201 5.2ms 
+22:52:35.693 seq=  61 OK   status=201 7.7ms 
+22:52:36.191 seq=  62 OK   status=201 4.5ms 
+22:52:36.694 seq=  63 OK   status=201 5.8ms 
+22:52:37.206 seq=  64 OK   status=201 11.8ms 
+22:52:37.706 seq=  65 OK   status=201 7.0ms 
+22:52:38.212 seq=  66 OK   status=201 6.7ms 
+22:52:38.717 seq=  67 OK   status=201 6.5ms 
+22:52:39.218 seq=  68 OK   status=201 5.9ms 
+22:52:39.722 seq=  69 OK   status=201 5.9ms 
+22:52:40.223 seq=  70 OK   status=201 6.5ms 
+22:52:40.723 seq=  71 OK   status=201 5.3ms 
+22:52:41.229 seq=  72 OK   status=201 6.1ms 
+22:52:41.736 seq=  73 OK   status=201 6.7ms 
+22:52:42.249 seq=  74 OK   status=201 15.8ms 
+22:52:42.742 seq=  75 OK   status=201 6.0ms 
+22:52:43.245 seq=  76 OK   status=201 5.6ms 
+22:52:43.750 seq=  77 OK   status=201 5.7ms 
+22:52:44.252 seq=  78 OK   status=201 5.6ms 
+22:52:44.753 seq=  79 OK   status=201 5.2ms 
+22:52:45.260 seq=  80 OK   status=201 6.9ms 
+22:52:45.763 seq=  81 OK   status=201 6.3ms 
+22:52:46.261 seq=  82 OK   status=201 3.3ms 
+22:52:46.768 seq=  83 OK   status=201 5.9ms 
+22:52:47.270 seq=  84 OK   status=201 5.0ms 
+22:52:47.773 seq=  85 OK   status=201 5.4ms 
+22:52:48.275 seq=  86 OK   status=201 5.8ms 
+22:52:48.781 seq=  87 OK   status=201 7.3ms 
+22:52:49.280 seq=  88 OK   status=201 5.6ms 
+22:52:49.784 seq=  89 OK   status=201 7.8ms 
+22:52:50.292 seq=  90 OK   status=201 10.5ms 
+22:52:50.790 seq=  91 OK   status=201 6.3ms 
+22:52:51.295 seq=  92 OK   status=201 10.5ms 
+22:52:51.792 seq=  93 OK   status=201 6.7ms 
+22:52:52.297 seq=  94 OK   status=201 10.4ms 
+22:52:52.800 seq=  95 OK   status=201 7.1ms 
+
+watch 'failure_link' done: 96 requests, outages=['13.1s']  log -> /results/watch_failure_link.csv

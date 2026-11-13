@@ -1,0 +1,23 @@
+# Bounded traceroute checks from the meter container (read-only; firewall left loaded)
+# Recorded: 2026-11-13 08:02:15 UTC
+
+## Router DENY meters-to-DB counter before
+		ip saddr 10.10.1.0/24 ip daddr 10.10.3.0/24 counter packets 20 bytes 1200 drop comment "DENY meters to DB"
+
+$ docker exec meter traceroute -n -I -m 5 -q 1 -w 1 10.10.2.10
+traceroute to 10.10.2.10 (10.10.2.10), 5 hops max, 60 byte packets
+ 1  10.10.1.254  1.022 ms
+ 2  10.10.2.10  0.052 ms
+exit=0
+
+$ docker exec meter timeout 30 traceroute -n -I -m 5 -q 1 -w 1 10.10.3.10
+traceroute to 10.10.3.10 (10.10.3.10), 5 hops max, 60 byte packets
+ 1  10.10.1.254  0.121 ms
+ 2  *
+ 3  *
+ 4  *
+ 5  *
+exit=0
+
+## Router DENY meters-to-DB counter after
+		ip saddr 10.10.1.0/24 ip daddr 10.10.3.0/24 counter packets 24 bytes 1440 drop comment "DENY meters to DB"

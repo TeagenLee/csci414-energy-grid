@@ -1,0 +1,10 @@
+2026-11-13 06:20:14.085 INFO 10.10.1.10 POST /readings 201 28.9ms
+2026-11-13 06:20:14.091 INFO 10.10.1.10 GET /meters/report-demo-20261112/latest 200 4.4ms
+2026-11-13 06:20:14.095 INFO 10.10.1.10 PATCH /readings/6af6ac1e1dd9bfba6656b461 200 2.3ms
+2026-11-13 06:20:14.099 INFO 10.10.1.10 GET /meters/report-demo-20261112/latest 200 1.4ms
+2026-11-13 06:20:14.102 INFO 10.10.1.10 POST /readings 422 1.6ms
+2026-11-13 06:20:14.104 INFO 10.10.1.10 GET /meters/report-demo-absent-20261112/latest 404 0.9ms
+2026-11-13 06:20:14.107 INFO 10.10.1.10 PATCH /readings/not-an-id 400 0.4ms
+2026-11-13 06:20:14.109 INFO 10.10.1.10 GET /meters/report-demo-20261112/readings 400 0.6ms
+2026-11-13 06:20:14.110 INFO 10.10.1.10 POST /readings 422 0.5ms
+2026-11-13 06:20:14.112 INFO 10.10.1.10 GET /meters/report-demo-20261112/readings 400 0.3ms

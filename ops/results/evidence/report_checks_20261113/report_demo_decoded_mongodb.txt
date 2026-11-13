@@ -1,0 +1,597 @@
+Frame 25: Packet, 595 bytes on wire (4760 bits), 595 bytes captured (4760 bits)
+    Encapsulation type: Linux cooked-mode capture v2 (210)
+    Arrival Time: Nov 12, 2026 22:20:14.083750000 PST
+    UTC Arrival Time: Nov 13, 2026 06:20:14.083750000 UTC
+    Epoch Arrival Time: 1794550814.083750000
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 26.271000 milliseconds]
+    [Time since reference or first frame: 33.429000 milliseconds]
+    Frame Number: 25
+    Frame Length: 595 bytes (4760 bits)
+    Capture Length: 595 bytes (4760 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: sll:ethertype:ip:tcp:mongo]
+    Character encoding: ASCII (0)
+Linux cooked capture v2
+    Protocol: IPv4 (0x0800)
+    Reserved: 0000
+    Interface index: 12
+    Link-layer address type: Ethernet (1)
+    Packet type: Unicast to us (0)
+    Link-layer address length: 6
+    Source: 6a:0c:fc:8c:7f:fb (6a:0c:fc:8c:7f:fb)
+    Unused: 0000
+Internet Protocol Version 4, Src: 10.10.2.10, Dst: 10.10.3.10
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 575
+    Identification: 0xb4eb (46315)
+    010. .... = Flags: 0x2, Don't fragment
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 64
+    Protocol: TCP (6)
+    Header Checksum: 0x6aa6 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 10.10.2.10
+    Destination Address: 10.10.3.10
+    [Stream index: 1]
+Transmission Control Protocol, Src Port: 40440, Dst Port: 27017, Seq: 1, Ack: 1, Len: 523
+    Source Port: 40440
+    Destination Port: 27017
+    [Stream index: 1]
+    [Stream Packet Number: 1]
+    [Conversation completeness: Incomplete (0)]
+        ..0. .... = RST: Absent
+        ...0 .... = FIN: Absent
+        .... 0... = Data: Absent
+        .... .0.. = ACK: Absent
+        .... ..0. = SYN-ACK: Absent
+        .... ...0 = SYN: Absent
+        [Completeness Flags: [ Null ]]
+    [TCP Segment Len: 523]
+    Sequence Number: 1    (relative sequence number)
+    Sequence Number (raw): 4100649563
+    [Next Sequence Number: 524    (relative sequence number)]
+    Acknowledgment Number: 1    (relative ack number)
+    Acknowledgment number (raw): 2362572767
+    1000 .... = Header Length: 32 bytes (8)
+    Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Accurate ECN: Not set
+        .... 0... .... = Congestion Window Reduced: Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+        [TCP Flags: ·······AP···]
+    Window: 579
+    [Calculated window size: 579]
+    [Window size scaling factor: -1 (unknown)]
+    Checksum: 0x1b59 [unverified]
+    [Checksum Status: Unverified]
+    Urgent Pointer: 0
+    Options: (12 bytes), No-Operation (NOP), No-Operation (NOP), Timestamps
+        TCP Option - No-Operation (NOP)
+            Kind: No-Operation (1)
+        TCP Option - No-Operation (NOP)
+            Kind: No-Operation (1)
+        TCP Option - Timestamps: TSval 1654784712, TSecr 4190481089
+            Kind: Time Stamp Option (8)
+            Length: 10
+            Timestamp value: 1654784712
+            Timestamp echo reply: 4190481089
+    [Timestamps]
+        [Time since first frame in this TCP stream: 0.000000000 seconds]
+        [Time since previous frame in this TCP stream: 0.000000000 seconds]
+    [Client Contiguous Streams: 0]
+    [Server Contiguous Streams: 1]
+    TCP payload (523 bytes)
+    [PDU Size: 523]
+Mongo Wire Protocol
+    Message Length: 523
+    Request ID: 0x556b69ed (1433102829)
+    Response To: 0x00000000 (0)
+    OpCode: Extensible Message Format (2013)
+    Message Flags: 0x00000000
+        .... .... .... .... .... .... .... ...0 = ChecksumPresent: No
+        .... .... .... .... .... .... .... ..0. = MoreToCome: No
+        .... .... .... ...0 .... .... .... .... = ExhaustAllowed: No
+    Section
+        Kind: Body (0)
+        BodyDocument
+            Document length: 86
+            Elements
+                Element: insert
+                    Type: String (0x02)
+                    Length: 9
+                    Value: readings
+                Element: ordered
+                    Type: Boolean (0x08)
+                    Value: True
+                Element: lsid
+                    Type: Document (0x03)
+                    Document
+                        Document length: 30
+                        Elements
+                            Element: id
+                                Type: Binary (0x05)
+                                Length: 16
+                                Value: 1161fd80c7f94693a41f032be0c5ce30
+                Element: $db
+                    Type: String (0x02)
+                    Length: 5
+                    Value: grid
+    Section
+        Kind: Document Sequence (1)
+        Size: 415
+        SeqID: documents
+        DocumentSequence
+            Document
+                Document length: 401
+                Elements
+                    Element: _id
+                        Type: Object ID (0x07)
+                        ObjectID: 6af6ac1e1dd9bfba6656b461
+                            ObjectID Time: 1794550814
+                            ObjectID Machine: 1dd9bfba66
+                                ObjectID Host: 0xbfd91d
+                                ObjectID PID: 26298
+                            ObjectID Inc: 5682273
+                    Element: meter_id
+                        Type: String (0x02)
+                        Length: 21
+                        Value: report-demo-20261112
+                    Element: ts
+                        Type: String (0x02)
+                        Length: 33
+                        Value: 2026-11-13T06:20:14.049442+00:00
+                    Element: sent_at
+                        Type: Double (0x01)
+                        Value: 1794550814.0494585
+                    Element: global_active_power
+                        Type: Double (0x01)
+                        Value: 2.5
+                    Element: global_reactive_power
+                        Type: Int32 (0x10)
+                        Value: 0
+                    Element: voltage
+                        Type: Double (0x01)
+                        Value: 240
+                    Element: global_intensity
+                        Type: Double (0x01)
+                        Value: 10.4
+                    Element: sub_metering_1
+                        Type: Int32 (0x10)
+                        Value: 0
+                    Element: sub_metering_2
+                        Type: Int32 (0x10)
+                        Value: 0
+                    Element: sub_metering_3
+                        Type: Int32 (0x10)
+                        Value: 0
+                    Element: source
+                        Type: String (0x02)
+                        Length: 17
+                        Value: synthetic-replay
+                    Element: reading_type
+                        Type: String (0x02)
+                        Length: 12
+                        Value: consumption
+                    Element: generation_kw
+                        Type: NULL (0x0a)
+                    Element: received_at
+                        Type: Double (0x01)
+                        Value: 1794550814.0586936
+                    Element: freshness_ms
+                        Type: Double (0x01)
+                        Value: 9.24
+                    Element: anomaly
+                        Type: Boolean (0x08)
+                        Value: False
+
+Frame 41: Packet, 578 bytes on wire (4624 bits), 578 bytes captured (4624 bits)
+    Encapsulation type: Linux cooked-mode capture v2 (210)
+    Arrival Time: Nov 12, 2026 22:20:14.091290000 PST
+    UTC Arrival Time: Nov 13, 2026 06:20:14.091290000 UTC
+    Epoch Arrival Time: 1794550814.091290000
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 3.495000 milliseconds]
+    [Time delta from previous displayed frame: 7.540000 milliseconds]
+    [Time since reference or first frame: 40.969000 milliseconds]
+    Frame Number: 41
+    Frame Length: 578 bytes (4624 bits)
+    Capture Length: 578 bytes (4624 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: sll:ethertype:ip:tcp:mongo]
+    Character encoding: ASCII (0)
+Linux cooked capture v2
+    Protocol: IPv4 (0x0800)
+    Reserved: 0000
+    Interface index: 13
+    Link-layer address type: Ethernet (1)
+    Packet type: Unicast to us (0)
+    Link-layer address length: 6
+    Source: c6:be:88:1c:49:ff (c6:be:88:1c:49:ff)
+    Unused: 0000
+Internet Protocol Version 4, Src: 10.10.3.10, Dst: 10.10.2.10
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 558
+    Identification: 0x721b (29211)
+    010. .... = Flags: 0x2, Don't fragment
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 64
+    Protocol: TCP (6)
+    Header Checksum: 0xad87 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 10.10.3.10
+    Destination Address: 10.10.2.10
+    [Stream index: 1]
+Transmission Control Protocol, Src Port: 27017, Dst Port: 40440, Seq: 46, Ack: 720, Len: 506
+    Source Port: 27017
+    Destination Port: 40440
+    [Stream index: 1]
+    [Stream Packet Number: 9]
+    [Conversation completeness: Incomplete (12)]
+        ..0. .... = RST: Absent
+        ...0 .... = FIN: Absent
+        .... 1... = Data: Present
+        .... .1.. = ACK: Present
+        .... ..0. = SYN-ACK: Absent
+        .... ...0 = SYN: Absent
+        [Completeness Flags: ··DA··]
+    [TCP Segment Len: 506]
+    Sequence Number: 46    (relative sequence number)
+    Sequence Number (raw): 2362572812
+    [Next Sequence Number: 552    (relative sequence number)]
+    Acknowledgment Number: 720    (relative ack number)
+    Acknowledgment number (raw): 4100650282
+    1000 .... = Header Length: 32 bytes (8)
+    Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Accurate ECN: Not set
+        .... 0... .... = Congestion Window Reduced: Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+        [TCP Flags: ·······AP···]
+    Window: 501
+    [Calculated window size: 501]
+    [Window size scaling factor: -1 (unknown)]
+    Checksum: 0x1b48 [unverified]
+    [Checksum Status: Unverified]
+    Urgent Pointer: 0
+    Options: (12 bytes), No-Operation (NOP), No-Operation (NOP), Timestamps
+        TCP Option - No-Operation (NOP)
+            Kind: No-Operation (1)
+        TCP Option - No-Operation (NOP)
+            Kind: No-Operation (1)
+        TCP Option - Timestamps: TSval 4190481914, TSecr 1654784717
+            Kind: Time Stamp Option (8)
+            Length: 10
+            Timestamp value: 4190481914
+            Timestamp echo reply: 1654784717
+    [Timestamps]
+        [Time since first frame in this TCP stream: 7.540000 milliseconds]
+        [Time since previous frame in this TCP stream: 3.495000 milliseconds]
+    [SEQ/ACK analysis]
+        [This is an ACK to the segment in frame: 39]
+            [Expert Info (Note/Sequence): Ambiguous ACK following Karn's definition]
+                [Ambiguous ACK following Karn's definition]
+                [Severity level: Note]
+                [Group: Sequence]
+        [The RTT to ACK the segment was: 3.499000 milliseconds]
+        [Bytes in flight: 506]
+        [Bytes sent since last PSH flag: 506]
+    [Client Contiguous Streams: 1]
+    [Server Contiguous Streams: 1]
+    TCP payload (506 bytes)
+    [PDU Size: 506]
+Mongo Wire Protocol
+    Message Length: 506
+    Request ID: 0x00000415 (1045)
+    Response To: 0x70836196 (1887658390)
+    OpCode: Extensible Message Format (2013)
+    Message Flags: 0x00000000
+        .... .... .... .... .... .... .... ...0 = ChecksumPresent: No
+        .... .... .... .... .... .... .... ..0. = MoreToCome: No
+        .... .... .... ...0 .... .... .... .... = ExhaustAllowed: No
+    Section
+        Kind: Body (0)
+        BodyDocument
+            Document length: 485
+            Elements
+                Element: cursor
+                    Type: Document (0x03)
+                    Document
+                        Document length: 460
+                        Elements
+                            Element: firstBatch
+                                Type: Array (0x04)
+                                Document
+                                    Document length: 409
+                                    Elements
+                                        Element: 0
+                                            Type: Document (0x03)
+                                            Document
+                                                Document length: 401
+                                                Elements
+                                                    Element: _id
+                                                        Type: Object ID (0x07)
+                                                        ObjectID: 6af6ac1e1dd9bfba6656b461
+                                                            ObjectID Time: 1794550814
+                                                            ObjectID Machine: 1dd9bfba66
+                                                                ObjectID Host: 0xbfd91d
+                                                                ObjectID PID: 26298
+                                                            ObjectID Inc: 5682273
+                                                    Element: meter_id
+                                                        Type: String (0x02)
+                                                        Length: 21
+                                                        Value: report-demo-20261112
+                                                    Element: ts
+                                                        Type: String (0x02)
+                                                        Length: 33
+                                                        Value: 2026-11-13T06:20:14.049442+00:00
+                                                    Element: sent_at
+                                                        Type: Double (0x01)
+                                                        Value: 1794550814.0494585
+                                                    Element: global_active_power
+                                                        Type: Double (0x01)
+                                                        Value: 2.5
+                                                    Element: global_reactive_power
+                                                        Type: Int32 (0x10)
+                                                        Value: 0
+                                                    Element: voltage
+                                                        Type: Double (0x01)
+                                                        Value: 240
+                                                    Element: global_intensity
+                                                        Type: Double (0x01)
+                                                        Value: 10.4
+                                                    Element: sub_metering_1
+                                                        Type: Int32 (0x10)
+                                                        Value: 0
+                                                    Element: sub_metering_2
+                                                        Type: Int32 (0x10)
+                                                        Value: 0
+                                                    Element: sub_metering_3
+                                                        Type: Int32 (0x10)
+                                                        Value: 0
+                                                    Element: source
+                                                        Type: String (0x02)
+                                                        Length: 17
+                                                        Value: synthetic-replay
+                                                    Element: reading_type
+                                                        Type: String (0x02)
+                                                        Length: 12
+                                                        Value: consumption
+                                                    Element: generation_kw
+                                                        Type: NULL (0x0a)
+                                                    Element: received_at
+                                                        Type: Double (0x01)
+                                                        Value: 1794550814.0586936
+                                                    Element: freshness_ms
+                                                        Type: Double (0x01)
+                                                        Value: 9.24
+                                                    Element: anomaly
+                                                        Type: Boolean (0x08)
+                                                        Value: False
+                            Element: id
+                                Type: Int64 (0x12)
+                                Value: 0
+                            Element: ns
+                                Type: String (0x02)
+                                Length: 14
+                                Value: grid.readings
+                Element: ok
+                    Type: Double (0x01)
+                    Value: 1
+
+Frame 55: Packet, 299 bytes on wire (2392 bits), 299 bytes captured (2392 bits)
+    Encapsulation type: Linux cooked-mode capture v2 (210)
+    Arrival Time: Nov 12, 2026 22:20:14.094217000 PST
+    UTC Arrival Time: Nov 13, 2026 06:20:14.094217000 UTC
+    Epoch Arrival Time: 1794550814.094217000
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 724.000 microseconds]
+    [Time delta from previous displayed frame: 2.927000 milliseconds]
+    [Time since reference or first frame: 43.896000 milliseconds]
+    Frame Number: 55
+    Frame Length: 299 bytes (2392 bits)
+    Capture Length: 299 bytes (2392 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: sll:ethertype:ip:tcp:mongo]
+    Character encoding: ASCII (0)
+Linux cooked capture v2
+    Protocol: IPv4 (0x0800)
+    Reserved: 0000
+    Interface index: 12
+    Link-layer address type: Ethernet (1)
+    Packet type: Unicast to us (0)
+    Link-layer address length: 6
+    Source: 6a:0c:fc:8c:7f:fb (6a:0c:fc:8c:7f:fb)
+    Unused: 0000
+Internet Protocol Version 4, Src: 10.10.2.10, Dst: 10.10.3.10
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 279
+    Identification: 0xb4ee (46318)
+    010. .... = Flags: 0x2, Don't fragment
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 64
+    Protocol: TCP (6)
+    Header Checksum: 0x6bcb [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 10.10.2.10
+    Destination Address: 10.10.3.10
+    [Stream index: 1]
+Transmission Control Protocol, Src Port: 40440, Dst Port: 27017, Seq: 720, Ack: 552, Len: 227
+    Source Port: 40440
+    Destination Port: 27017
+    [Stream index: 1]
+    [Stream Packet Number: 11]
+    [Conversation completeness: Incomplete (12)]
+        ..0. .... = RST: Absent
+        ...0 .... = FIN: Absent
+        .... 1... = Data: Present
+        .... .1.. = ACK: Present
+        .... ..0. = SYN-ACK: Absent
+        .... ...0 = SYN: Absent
+        [Completeness Flags: ··DA··]
+    [TCP Segment Len: 227]
+    Sequence Number: 720    (relative sequence number)
+    Sequence Number (raw): 4100650282
+    [Next Sequence Number: 947    (relative sequence number)]
+    Acknowledgment Number: 552    (relative ack number)
+    Acknowledgment number (raw): 2362573318
+    1000 .... = Header Length: 32 bytes (8)
+    Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Accurate ECN: Not set
+        .... 0... .... = Congestion Window Reduced: Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+        [TCP Flags: ·······AP···]
+    Window: 602
+    [Calculated window size: 602]
+    [Window size scaling factor: -1 (unknown)]
+    Checksum: 0x1a31 [unverified]
+    [Checksum Status: Unverified]
+    Urgent Pointer: 0
+    Options: (12 bytes), No-Operation (NOP), No-Operation (NOP), Timestamps
+        TCP Option - No-Operation (NOP)
+            Kind: No-Operation (1)
+        TCP Option - No-Operation (NOP)
+            Kind: No-Operation (1)
+        TCP Option - Timestamps: TSval 1654784723, TSecr 4190481914
+            Kind: Time Stamp Option (8)
+            Length: 10
+            Timestamp value: 1654784723
+            Timestamp echo reply: 4190481914
+    [Timestamps]
+        [Time since first frame in this TCP stream: 10.467000 milliseconds]
+        [Time since previous frame in this TCP stream: 2.919000 milliseconds]
+    [SEQ/ACK analysis]
+        [This is an ACK to the segment in frame: 41]
+            [Expert Info (Note/Sequence): Ambiguous ACK following Karn's definition]
+                [Ambiguous ACK following Karn's definition]
+                [Severity level: Note]
+                [Group: Sequence]
+        [The RTT to ACK the segment was: 2.927000 milliseconds]
+        [Bytes in flight: 227]
+        [Bytes sent since last PSH flag: 227]
+    [Client Contiguous Streams: 1]
+    [Server Contiguous Streams: 1]
+    TCP payload (227 bytes)
+    [PDU Size: 227]
+Mongo Wire Protocol
+    Message Length: 227
+    Request ID: 0x539f7f12 (1402961682)
+    Response To: 0x00000000 (0)
+    OpCode: Extensible Message Format (2013)
+    Message Flags: 0x00000000
+        .... .... .... .... .... .... .... ...0 = ChecksumPresent: No
+        .... .... .... .... .... .... .... ..0. = MoreToCome: No
+        .... .... .... ...0 .... .... .... .... = ExhaustAllowed: No
+    Section
+        Kind: Body (0)
+        BodyDocument
+            Document length: 86
+            Elements
+                Element: update
+                    Type: String (0x02)
+                    Length: 9
+                    Value: readings
+                Element: ordered
+                    Type: Boolean (0x08)
+                    Value: True
+                Element: lsid
+                    Type: Document (0x03)
+                    Document
+                        Document length: 30
+                        Elements
+                            Element: id
+                                Type: Binary (0x05)
+                                Length: 16
+                                Value: 1161fd80c7f94693a41f032be0c5ce30
+                Element: $db
+                    Type: String (0x02)
+                    Length: 5
+                    Value: grid
+    Section
+        Kind: Document Sequence (1)
+        Size: 119
+        SeqID: updates
+        DocumentSequence
+            Document
+                Document length: 107
+                Elements
+                    Element: q
+                        Type: Document (0x03)
+                        Document
+                            Document length: 22
+                            Elements
+                                Element: _id
+                                    Type: Object ID (0x07)
+                                    ObjectID: 6af6ac1e1dd9bfba6656b461
+                                        ObjectID Time: 1794550814
+                                        ObjectID Machine: 1dd9bfba66
+                                            ObjectID Host: 0xbfd91d
+                                            ObjectID PID: 26298
+                                        ObjectID Inc: 5682273
+                    Element: u
+                        Type: Document (0x03)
+                        Document
+                            Document length: 57
+                            Elements
+                                Element: $set
+                                    Type: Document (0x03)
+                                    Document
+                                        Document length: 46
+                                        Elements
+                                            Element: flagged
+                                                Type: Boolean (0x08)
+                                                Value: True
+                                            Element: note
+                                                Type: String (0x02)
+                                                Length: 21
+                                                Value: report demonstration
+                    Element: multi
+                        Type: Boolean (0x08)
+                        Value: False
+                    Element: upsert
+                        Type: Boolean (0x08)
+                        Value: False
+

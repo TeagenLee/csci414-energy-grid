@@ -1,0 +1,44 @@
+$ docker exec meter ip -br -4 addr
+lo               UNKNOWN        127.0.0.1/8 
+eth0@if84        UP             10.10.1.10/24 
+
+$ docker exec meter ip route
+default via 10.10.1.1 dev eth0 
+10.10.1.0/24 dev eth0 proto kernel scope link src 10.10.1.10 
+10.10.2.0/24 via 10.10.1.254 dev eth0 
+10.10.3.0/24 via 10.10.1.254 dev eth0 
+
+$ docker exec router ip -br -4 addr
+lo               UNKNOWN        127.0.0.1/8 
+eth0@if80        UP             10.10.1.254/24 
+eth1@if81        UP             10.10.2.254/24 
+eth2@if82        UP             10.10.3.254/24 
+
+$ docker exec router ip route
+default via 10.10.2.1 dev eth1 
+10.10.1.0/24 dev eth0 proto kernel scope link src 10.10.1.254 
+10.10.2.0/24 dev eth1 proto kernel scope link src 10.10.2.254 
+10.10.3.0/24 dev eth2 proto kernel scope link src 10.10.3.254 
+
+$ docker exec api ip -br -4 addr
+lo               UNKNOWN        127.0.0.1/8 
+eth0@if83        UP             10.10.2.10/24 
+
+$ docker exec api ip route
+default via 10.10.2.1 dev eth0 
+10.10.1.0/24 via 10.10.2.254 dev eth0 
+10.10.2.0/24 dev eth0 proto kernel scope link src 10.10.2.10 
+10.10.3.0/24 via 10.10.2.254 dev eth0 
+
+$ docker exec db ip -br -4 addr
+lo               UNKNOWN        127.0.0.1/8 
+eth0@if79        UP             10.10.3.10/24 
+
+$ docker exec db ip route
+default via 10.10.3.1 dev eth0 
+10.10.1.0/24 via 10.10.3.254 dev eth0 
+10.10.2.0/24 via 10.10.3.254 dev eth0 
+10.10.3.0/24 dev eth0 proto kernel scope link src 10.10.3.10 
+
+$ docker exec router sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1

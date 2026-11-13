@@ -9,7 +9,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pymongo import ASCENDING, DESCENDING, MongoClient
 from pymongo.errors import PyMongoError
 
@@ -34,6 +34,16 @@ readings = db["readings"]
 app = FastAPI(title="Energy Grid Telemetry API")
 
 
+# reading_type distinguishes a consumption record (the original UCI-proxy
+# telemetry; default, so existing/historical documents without this field are
+# still treated as consumption everywhere below) from an explicitly simulated
+# generation record. Generation is not implemented by relabeling consumption
+# values: generation_kw is a separate, clearly synthetic value (see
+# meter_sim.py cmd_generate) and is only meaningful when reading_type is
+# "generation"; it is None/absent on every consumption record.
+READING_TYPES = {"consumption", "generation"}
+
+
 class Reading(BaseModel):
     meter_id: str = Field(min_length=1, max_length=40)
     ts: str                                   # reading timestamp (ISO)
@@ -46,6 +56,23 @@ class Reading(BaseModel):
     sub_metering_2: float = 0
     sub_metering_3: float = 0
     source: str = "synthetic-replay"
+    reading_type: str = "consumption"         # "consumption" (default) or "generation"
+    generation_kw: Optional[float] = Field(ge=0, default=None)  # synthetic PV output, kW
+
+    @field_validator("reading_type")
+    @classmethod
+    def _valid_reading_type(cls, v):
+        if v not in READING_TYPES:
+            raise ValueError(f"reading_type must be one of {sorted(READING_TYPES)}")
+        return v
+
+    @model_validator(mode="after")
+    def _generation_requires_value(self):
+        if self.reading_type == "generation" and self.generation_kw is None:
+            raise ValueError("generation_kw is required when reading_type is 'generation'")
+        if self.reading_type == "consumption" and self.generation_kw is not None:
+            raise ValueError("generation_kw must be omitted when reading_type is 'consumption'")
+        return self
 
 
 class Batch(BaseModel):
@@ -144,10 +171,21 @@ def latest(meter_id: str):
 
 
 @app.get("/meters/{meter_id}/readings")           # READ (recent window)
-def recent(meter_id: str, limit: int = 20):
+def recent(meter_id: str, limit: int = 20, reading_type: Optional[str] = None):
     if not 1 <= limit <= 500:
         raise HTTPException(400, "limit must be 1..500")
-    cur = readings.find({"meter_id": meter_id}).sort("received_at", DESCENDING).limit(limit)
+    query = {"meter_id": meter_id}
+    if reading_type is not None:
+        if reading_type not in READING_TYPES:
+            raise HTTPException(400, f"reading_type must be one of {sorted(READING_TYPES)}")
+        if reading_type == "generation":
+            query["reading_type"] = "generation"
+        else:
+            # pre-existing documents have no reading_type field at all;
+            # treat that absence as consumption so the filter still covers
+            # historical records inserted before this field existed
+            query["$or"] = [{"reading_type": "consumption"}, {"reading_type": {"$exists": False}}]
+    cur = readings.find(query).sort("received_at", DESCENDING).limit(limit)
     return [clean(d) for d in cur]
 
 
@@ -180,4 +218,11 @@ def stats():
         "synthetic": readings.count_documents({"source": "synthetic-replay"}),
         "anomalies": readings.count_documents({"anomaly": True}),
         "meters": sorted(readings.distinct("meter_id")),
+        # reading_type is absent on every record inserted before this change
+        # (import_uci.py and all historical/synthetic records up to now), so
+        # those are explicitly counted as consumption, not left out of either
+        # bucket. No historical document is reinterpreted as generation.
+        "consumption_readings": readings.count_documents(
+            {"$or": [{"reading_type": "consumption"}, {"reading_type": {"$exists": False}}]}),
+        "generation_readings": readings.count_documents({"reading_type": "generation"}),
     }

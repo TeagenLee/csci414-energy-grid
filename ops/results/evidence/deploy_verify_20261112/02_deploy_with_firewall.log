@@ -1,0 +1,195 @@
+[1/6] dataset
+-rw-rw-r--@ 1 jon  staff   127M Oct 12  2012 data/household_power_consumption.txt
+[2/6] TLS certificate for the API (self-signed, SAN = 10.10.2.10)
+.....+.+......+..+...+...+.+..............+.......+..+............+.+.........+.....+...............+.+............+++++++++++++++++++++++++++++++++++++++*....+...........+....+..+.+..+.+......+++++++++++++++++++++++++++++++++++++++*...+...+...+.........+............+.....+....+..+....+.........+...........+.........+......+.+...+..+....+....................+............................+.....+.......+..............+.......+..............+...+...+.........+.............+..+.........+....+...+..+.......+........+...............+.+......+........+.+...........+....+..+...+.+...+..+...+.....................+....+.....+.+..++++++
+......+....+..............+.+......+...+.....+++++++++++++++++++++++++++++++++++++++*..+............+..+.+............+........+.+......+........+.......+..+.+......+...+........+...+.........+++++++++++++++++++++++++++++++++++++++*....+...+..+.........+.............+........+...+.+...+..+...+.+...........+.+.....+.......+...+...............+.....+..........+.................+.+..+...+.........+.............+..+.+......+.....+...+...+.......+...+..+......+.+...+......+..+.........+....+..+...............+.......+.....+.+..+.......+..+...+......+.+.....+............................+...+...+............+...+..+...................+...+...+...+..+....+...+..+..................+.+.....+.+...+...+........+..........+.....+....+..+......+......................+.....+......+......+.+........+......+................+...............+...+.....++++++
+-----
+[3/6] build + start containers
+ Image grid-db Building 
+ Image grid-api Building 
+ Image grid-meter Building 
+ Image grid-router Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.84kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 399B done
+#2 DONE 0.0s
+
+#3 [router internal] load build definition from Dockerfile
+#3 transferring dockerfile: 270B done
+#3 DONE 0.0s
+
+#4 [db internal] load build definition from Dockerfile
+#4 transferring dockerfile: 217B done
+#4 DONE 0.0s
+
+#5 [meter internal] load build definition from Dockerfile
+#5 transferring dockerfile: 360B done
+#5 DONE 0.0s
+
+#6 [meter internal] load metadata for docker.io/library/python:3.12-slim
+#6 ...
+
+#7 [router internal] load metadata for docker.io/library/ubuntu:24.04
+#7 DONE 0.6s
+
+#8 [router internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [db internal] load metadata for docker.io/library/mongo:7.0
+#9 DONE 0.6s
+
+#6 [api internal] load metadata for docker.io/library/python:3.12-slim
+#6 DONE 0.6s
+
+#10 [db internal] load .dockerignore
+#10 transferring context: 2B done
+#10 DONE 0.0s
+
+#11 [api internal] load .dockerignore
+#11 transferring context: 2B done
+#11 DONE 0.0s
+
+#12 [router 1/2] FROM docker.io/library/ubuntu:24.04@sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5
+#12 resolve docker.io/library/ubuntu:24.04@sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5 0.0s done
+#12 DONE 0.0s
+
+#13 [meter internal] load .dockerignore
+#13 transferring context: 2B done
+#13 DONE 0.0s
+
+#14 [router 2/2] RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       iproute2 nftables tcpdump iputils-ping traceroute iperf3 netcat-openbsd     && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [api internal] load build context
+#15 transferring context: 8.38kB 0.0s done
+#15 DONE 0.0s
+
+#16 [meter internal] load build context
+#16 transferring context: 10.40kB done
+#16 DONE 0.0s
+
+#17 [db 1/2] FROM docker.io/library/mongo:7.0@sha256:9896df581dfd0718b7abe112f4c37598d0986c54060e4ec1384997e6503c8c71
+#17 resolve docker.io/library/mongo:7.0@sha256:9896df581dfd0718b7abe112f4c37598d0986c54060e4ec1384997e6503c8c71 0.0s done
+#17 DONE 0.0s
+
+#18 [db 2/2] RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       iproute2 iputils-ping     && rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [meter 1/5] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#19 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 0.0s done
+#19 DONE 0.0s
+
+#20 [api 2/5] RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       iproute2 iputils-ping traceroute iperf3 tcpdump netcat-openbsd     && rm -rf /var/lib/apt/lists/*
+#20 CACHED
+
+#21 [api 4/5] WORKDIR /app
+#21 CACHED
+
+#22 [api 3/5] RUN pip install --no-cache-dir fastapi==0.115.* "uvicorn[standard]==0.32.*" pymongo==4.10.*
+#22 CACHED
+
+#23 [api 5/5] COPY app.py import_uci.py ./
+#23 CACHED
+
+#24 [meter 3/5] RUN pip install --no-cache-dir requests==2.32.*
+#24 CACHED
+
+#25 [meter 4/5] WORKDIR /app
+#25 CACHED
+
+#26 [meter 2/5] RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       iproute2 iputils-ping traceroute iperf3 tcpdump netcat-openbsd curl openssl     && rm -rf /var/lib/apt/lists/*
+#26 CACHED
+
+#27 [meter 5/5] COPY meter_sim.py ./
+#27 CACHED
+
+#28 [router] exporting to image
+#28 exporting layers done
+#28 exporting manifest sha256:a1297f2fd167ac9ac7bd3dcf079036f723c3498cc4b462bd8f525a423e66d4c9 done
+#28 exporting config sha256:4ccc26e0eea9ca55ffc8bf93784a10ac75ba86c32702c92b955062de41ef9a4d done
+#28 exporting attestation manifest sha256:29b11a03691f3f53825236f738c5ecf624fb7cf89f92aacb1c85a73970358184 0.0s done
+#28 exporting manifest list sha256:c340b0d74f593df0eeaea8ff7a878f4a6d9571d4c886e41eea891529f16b7319 0.0s done
+#28 naming to docker.io/library/grid-router:latest done
+#28 unpacking to docker.io/library/grid-router:latest done
+#28 DONE 0.1s
+
+#29 [db] exporting to image
+#29 exporting layers done
+#29 exporting manifest sha256:c9a1f653a88af3f0aa742146ebebfc50bd808cba5acf082eea29b2ffcf2c385d done
+#29 exporting config sha256:48e860653949b824c228ffbfd3f1d3c159422abc96f86218ffb6df96aa4cafcd done
+#29 exporting attestation manifest sha256:658a59d76d0f6dd0f40341ff1cacda412356ffdd89ab9c4b9f087d210ab16118 0.0s done
+#29 exporting manifest list sha256:7beb613fbccc7c5f7bd1702121f084b18d6a06f01e0e3b975a82a6b06d96efcb 0.0s done
+#29 naming to docker.io/library/grid-db:latest
+#29 naming to docker.io/library/grid-db:latest done
+#29 unpacking to docker.io/library/grid-db:latest 0.0s done
+#29 DONE 0.1s
+
+#30 [router] resolving provenance for metadata file
+#30 DONE 0.0s
+
+#31 [api] exporting to image
+#31 exporting layers done
+#31 exporting manifest sha256:d225887fb76d05c1ff8bfb2ab3cdd650433a32dea1981dd6664f77f4450c52e6 done
+#31 exporting config sha256:fa538c26cdb9235361fb98331811a362b56411d9a7a0365b94ea7de1e46ec1ac done
+#31 exporting attestation manifest sha256:16ee3d4881927414fc6b3a74ee5e5258a8b7acf50888026a141e1965744ed9e1 0.0s done
+#31 exporting manifest list sha256:217c1c34f8c290fafad1a5bf1e84684be6c8891ac7c0057d263a30bdc3605fd3 0.0s done
+#31 naming to docker.io/library/grid-api:latest done
+#31 unpacking to docker.io/library/grid-api:latest 0.0s done
+#31 DONE 0.2s
+
+#32 [meter] exporting to image
+#32 exporting layers done
+#32 exporting manifest sha256:376884f1a0573ce1b17a8ae5fd2d32ac6dca2f848722211d99a187f7c33683ae done
+#32 exporting config sha256:2e807661db491908202ff3967f568e0dfac26d849eb09c406318c08fc20cb5d5 done
+#32 exporting attestation manifest sha256:c50cdac0509626f2ecfe9dfdec37e6226e9f60e052a5d280ed4a626e367edf75 0.0s done
+#32 exporting manifest list sha256:b18d04a8d21bc48f6be5c14fb2637c9be8ed7e84c1421168686d65ff42856f22 0.0s done
+#32 naming to docker.io/library/grid-meter:latest done
+#32 unpacking to docker.io/library/grid-meter:latest done
+#32 DONE 0.2s
+
+#33 [db] resolving provenance for metadata file
+#33 DONE 0.0s
+
+#34 [meter] resolving provenance for metadata file
+#34 DONE 0.0s
+
+#35 [api] resolving provenance for metadata file
+#35 DONE 0.0s
+ Image grid-db Built 
+ Image grid-router Built 
+ Image grid-api Built 
+ Image grid-meter Built 
+ Network grid_db_net Creating 
+ Network grid_db_net Created 
+ Network grid_api_net Creating 
+ Network grid_api_net Created 
+ Network grid_meters_net Creating 
+ Network grid_meters_net Created 
+ Container db Creating 
+ Container router Creating 
+ Container db Created 
+ Container router Created 
+ Container api Creating 
+ Container api Created 
+ Container meter Creating 
+ Container meter Created 
+ Container db Starting 
+ Container router Starting 
+ Container db Started 
+ Container router Started 
+ Container api Starting 
+ Container api Started 
+ Container meter Starting 
+ Container meter Started 
+[4/6] waiting for API to answer over TLS...
+  API healthy
+[5/6] import UCI dataset into MongoDB (runs inside api container, segment 2 -> 3)
+imported 20000 UCI rows (skipped 4 rows with missing values)
+total documents in grid.readings: 40205
+[6/6] applying firewall
+firewall ON
+deploy finished: 2026-11-12 15:11:16

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # One-command deploy (Module F - automation). Usage: ./ops/deploy.sh [--with-firewall]
+# Secure deployment: ./ops/deploy.sh --with-firewall
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p ops/logs ops/results ops/captures data certs
@@ -13,7 +14,7 @@ fi
 ls -lh data/household_power_consumption.txt
 
 echo "[2/6] TLS certificate for the API (self-signed, SAN = 10.10.2.10)"
-if [ ! -f certs/api.crt ]; then
+if [ ! -s certs/api.crt ] || [ ! -s certs/api.key ]; then
   openssl req -x509 -newkey rsa:2048 -nodes -days 365 \
     -keyout certs/api.key -out certs/api.crt \
     -subj "/CN=grid-api" -addext "subjectAltName=IP:10.10.2.10,DNS:api"

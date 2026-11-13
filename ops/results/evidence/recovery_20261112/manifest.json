@@ -1,0 +1,54 @@
+{
+  "purpose": "Preserved copies of completed Mac-local recovery evidence; no experiments rerun. Console names retained as supplied; internal timestamps identify execution windows.",
+  "inspected_script": "ops/fail_recover.sh",
+  "inspected_script_sha256": "de1b2b5ed1665526bbbcc41ede15c471e47b7c19fe3324cb544b997b7c816f28",
+  "script_hash_note": "Observed at documentation time; console logs do not themselves embed this hash or a submission commit.",
+  "actual_command_exit_status": {
+    "db": {
+      "value": 0,
+      "source": "Claude validation report supplied by user; matching final_exit_status=0 in console log"
+    },
+    "link": {
+      "value": 0,
+      "source": "Claude validation report supplied by user; matching final_exit_status=0 in console log"
+    }
+  },
+  "files": [
+    {
+      "source": "ops/results/fail_recover_db_run_20261112_145133.log",
+      "preserved": "ops/results/evidence/recovery_20261112/fail_recover_db_run_20261112_145133.log",
+      "sha256": "c5b75ca1b48ece61dd02446b9eb1ed56eee6070aeed7421965cb8267ee19b161",
+      "bytes": 2122
+    },
+    {
+      "source": "ops/results/watch_failure_db.log",
+      "preserved": "ops/results/evidence/recovery_20261112/fail_recover_db_run_20261112_145133.watch.log",
+      "sha256": "3f54ecb292352ac1fadd3df57171eeb59d9ba289f4e51d52a87b80debf38e41b",
+      "bytes": 4772
+    },
+    {
+      "source": "ops/results/watch_failure_db.csv",
+      "preserved": "ops/results/evidence/recovery_20261112/fail_recover_db_run_20261112_145133.watch.csv",
+      "sha256": "8cc2587c3c86693445834e7d9859ce049ce0152c3d286be42165d279fa5ed1e7",
+      "bytes": 9523
+    },
+    {
+      "source": "ops/results/fail_recover_link_run_20261112_145256.log",
+      "preserved": "ops/results/evidence/recovery_20261112/fail_recover_link_run_20261112_145256.log",
+      "sha256": "5ee7c42de1293b80438490d32ceec32177b540d5650065e652322a20d220fecd",
+      "bytes": 2051
+    },
+    {
+      "source": "ops/results/watch_failure_link.log",
+      "preserved": "ops/results/evidence/recovery_20261112/fail_recover_link_run_20261112_145256.watch.log",
+      "sha256": "f714ad98f858b3694d5ee6c8aa77009359818ffe4c429939f464c2c5b587c0e5",
+      "bytes": 4611
+    },
+    {
+      "source": "ops/results/watch_failure_link.csv",
+      "preserved": "ops/results/evidence/recovery_20261112/fail_recover_link_run_20261112_145256.watch.csv",
+      "sha256": "db710804c53e540f5399152221d56ecf40c2dde8867a31364769f45dd41535f3",
+      "bytes": 9088
+    }
+  ]
+}
