@@ -23,11 +23,13 @@ BUILD  →  PROTECT  →  MEASURE  →  RECOVER
 - **Presentation slides:** [`docs/Energy Grid Telemetry Platform.pptx`](<docs/Energy Grid Telemetry Platform.pptx>), 12 slides covering Modules A–F, the throttled-link experiment, limitations and lessons learned.
 - **Evidence folders:**
   - [`ops/results/`](ops/results/): benchmark CSVs, `summary.csv`, ping and iperf3 output, recovery consoles
-  - [`ops/results/evidence/`](ops/results/evidence/): the Nov 12 recovery runs, the secure redeployment and the generation feature
+  - [`ops/results/evidence/`](ops/results/evidence/): the Nov 12 recovery runs, the secure redeployment and the generation feature, plus:
+    - [`report_checks_20261113/`](ops/results/evidence/report_checks_20261113/): the 13 Nov report checks: test client and transcript, traced-transaction capture, API log and MongoDB decode, firewall counters, routes, traceroutes, TLS transcript
+    - [`link_failure_20261110/`](ops/results/evidence/link_failure_20261110/): the 10 Nov link-failure console, client watch log and matching API log
   - [`ops/captures/`](ops/captures/): packet captures from Nov 10
   - [`ops/logs/`](ops/logs/): the API log
 
-The **report checks** set (13 Nov) is recorded in the final report itself: transcripts, screenshots and figures. Its raw transcript files are not included in this repository.
+The **report checks** set (13 Nov) is in `ops/results/evidence/report_checks_20261113/`; its terminal screenshots are embedded in the report.
 
 The report draws on three evidence sets and names the set with every result. This README does the same.
 
@@ -112,7 +114,7 @@ cd csci414-energy-grid
 > **Notes**
 > - The firewall is opt-in. Without `--with-firewall`, no ACL is loaded. The router does not restore its rules on restart; run `./ops/firewall.sh on` again.
 > - The key file is left at mode 644 by `deploy.sh`.
-> - Deployment from a fresh clone onto an empty MongoDB volume has **not** been re-run. The secure redeployment on 12 Nov reused the existing dataset and volume (`ops/results/evidence/deploy_verify_20261112/`).
+> - The verified secure redeployment on 12 Nov (`ops/results/evidence/deploy_verify_20261112/`) reused the existing dataset and MongoDB volume. The importer deletes and reloads its records on every run, but a first run onto an empty volume was not repeated.
 > - Container names and subnets are fixed, so only one copy of the stack can run on a host.
 
 ---
@@ -125,7 +127,7 @@ cd csci414-energy-grid
 | `api_net` | 10.10.2.0/24 | api 10.10.2.10 | eth1 10.10.2.254 | 10.10.2.1 |
 | `db_net` | 10.10.3.0/24 | db 10.10.3.10 | eth2 10.10.3.254 | 10.10.3.1 |
 
-At startup, each endpoint installs routes to the other two /24 subnets through its local `.254` router address (`docker-compose.yml` lines 41–42, 60–61 and 81–82). The router runs with `net.ipv4.ip_forward=1`. Interface names come from the report checks (final report §2) and can differ on another host.
+At startup, each endpoint installs routes to the other two /24 subnets through its local `.254` router address (`docker-compose.yml` lines 41–42, 60–61 and 81–82). The router runs with `net.ipv4.ip_forward=1`. Interface names come from the report checks (`ops/results/evidence/report_checks_20261113/interfaces_routes.txt`) and can differ on another host.
 
 **Verify:**
 
@@ -138,7 +140,7 @@ docker exec meter  traceroute -n -I -m 5 -q 1 -w 1 10.10.2.10
 docker exec meter  timeout 30 traceroute -n -I -m 5 -q 1 -w 1 10.10.3.10
 ```
 
-The traceroutes need `-I` (ICMP) because the firewall forwards ICMP echo from the meter but not UDP probes. In the report checks (13 Nov, 08:02 UTC), the trace to the API completed in two hops through 10.10.1.254. The trace to the database got a reply from 10.10.1.254 at hop 1 and no reply at hops 2–5. Over those two traces, the router's `DENY meters to DB` counter rose from 20 to 24 packets (final report §2).
+The traceroutes need `-I` (ICMP) because the firewall forwards ICMP echo from the meter but not UDP probes. In the report checks (13 Nov, 08:02 UTC), the trace to the API completed in two hops through 10.10.1.254. The trace to the database got a reply from 10.10.1.254 at hop 1 and no reply at hops 2–5. Over those two traces, the router's `DENY meters to DB` counter rose from 20 to 24 packets (`ops/results/evidence/report_checks_20261113/traceroute_20261113.txt`).
 
 ---
 
@@ -185,6 +187,9 @@ docker exec meter python meter_sim.py send --meter meter-demo
 # error cases; prints 422, 404, 400, 400
 docker exec meter python meter_sim.py errors
 
+# the report's asserting client (creates, reads, annotates, re-reads)
+docker exec -i meter python - < ops/results/evidence/report_checks_20261113/report_client.py
+
 # reads over verified TLS
 docker exec meter curl --cacert /certs/api.crt 'https://10.10.2.10:8443/meters/uci-house-1/readings?limit=2'
 docker exec meter curl --cacert /certs/api.crt 'https://10.10.2.10:8443/anomalies?limit=5'
@@ -194,9 +199,9 @@ docker exec meter curl --cacert /certs/api.crt  https://10.10.2.10:8443/stats
 docker exec meter python meter_sim.py generate --meter pv-demo-001 --hour 12
 ```
 
-Every command above writes new records to MongoDB. None of them writes to the evidence folders.
+Every command above writes new records to MongoDB. None of them writes to the evidence folders. `report_client.py` reuses the report's meter ID, so a second run adds more records under `report-demo-20261112`.
 
-**Recorded results (report checks, 13 Nov 06:20 UTC; final report §3):** POST 201, GET 200, PATCH 200 and GET 200 with the same ID, plus six error cases returning 422, 404, 400, 400, 422 and 400. For generation, `--hour 12`, `9` and `2` returned `generation_kw` 5.000, 3.536 and 0.000. The Nov 12 generation demo is in `ops/results/evidence/generation_feature_20261112/`.
+**Recorded results (report checks, 13 Nov 06:20 UTC; `ops/results/evidence/report_checks_20261113/report_transaction.txt`, report §3):** POST 201, GET 200, PATCH 200 and GET 200 with the same ID, plus six error cases returning 422, 404, 400, 400, 422 and 400. For generation, `--hour 12`, `9` and `2` returned `generation_kw` 5.000, 3.536 and 0.000. The Nov 12 generation demo is in `ops/results/evidence/generation_feature_20261112/`.
 
 ---
 
@@ -239,10 +244,10 @@ docker exec meter nc -zvw2 10.10.3.10 27017; echo "nc exit=$?"
 
 **Recorded results:**
 
-- **Report checks, 13 Nov (final report §4):**
-  - `nc` timed out with exit 1.
-  - The `DENY meters to DB` counter rose from 4 to 6 packets.
-  - The capture shows only the meter's SYN and one retransmission (frames 149–150), with no reply.
+- **Report checks, 13 Nov (report §4; files in `ops/results/evidence/report_checks_20261113/`):**
+  - `nc` timed out with exit 1 (`database_denial.txt`).
+  - The `DENY meters to DB` counter rose from 4 to 6 packets (`firewall_before.txt`, `firewall_after.txt`).
+  - `report_demo.pcap` shows only the meter's SYN and one retransmission (frames 149–150), with no reply.
 - **November 12 Mac set:** `ops/results/evidence/deploy_verify_20261112/` shows the firewall ruleset and before/after healthchecks (ALL PASS, including meter → DB blocked).
 - **November 10 set:** `ops/captures/deny_test.pcap` shows unanswered SYNs to 27017 and unanswered echo requests.
 
@@ -254,7 +259,7 @@ TLS protects what the meter and API say to each other. The ACL decides which con
 
 | Layer | Where |
 |---|---|
-| Packets: tcpdump on the router's `any` interface, which sees all three segments | `ops/captures/*.pcap` (Nov 10); report-check capture in final report §5 |
+| Packets: tcpdump on the router's `any` interface, which sees all three segments | `ops/captures/*.pcap` (Nov 10); `ops/results/evidence/report_checks_20261113/report_demo.pcap` (report checks) |
 | API log: method, path, status, server time | `ops/logs/api.log` |
 | Client: per-request latency and status | `ops/results/bench_*.csv`, `ops/results/watch_failure_*.csv` |
 | Health and recovery consoles | `ops/results/evidence/recovery_20261112/` and `ops/results/fail_recover_*_run_*.log` (Nov 12) |
@@ -270,14 +275,14 @@ sleep 2; docker exec meter python meter_sim.py send --meter meter-demo; wait
 
 **Correlations in the report:**
 
-- **One transaction across both hops (report checks, §5.1):** ObjectId `6af6ac1e1dd9bfba6656b461` connects three records: the client's POST response, the PATCH line in the API log, and the plaintext MongoDB update in frame 55 of the report-check capture.
+- **One transaction across both hops (report checks, §5.1):** ObjectId `6af6ac1e1dd9bfba6656b461` connects three records: the client's POST response, the PATCH line in the API log, and the plaintext MongoDB update in frame 55 of `report_demo.pcap` (decoded in `report_demo_decoded_mongodb.txt`; API lines in `report_demo_api.log`).
 - **Link failure (November 10 set, §5.2):**
   1. The API-side router interface went down at 20:50:57.789 UTC.
   2. The router sent ICMP Network Unreachable to the meter 0.23 s later (frame 516 of `ops/captures/link_failure.pcap`).
   3. `/health` began failing, and client requests failed at the transport level (status 0) with nothing logged by the API.
   4. After the interface came up, a new handshake completed within about 0.2 s, and the API logged `/health` 200 and a POST 201 within 0.8 s.
 
-  Of 105 watch requests, 100 succeeded. Sources: `ops/captures/link_failure.pcap`, final report §5.2.
+  Of 105 watch requests, 100 succeeded. Sources: `ops/captures/link_failure.pcap` and `ops/results/evidence/link_failure_20261110/` (`failure_link.txt`, `watch_failure_link.log`, `api_link_failure.log`).
 
 ---
 
@@ -344,17 +349,18 @@ Source: `ops/results/net_*.txt`, from a 20-packet ping and a 10 s iperf3 run, me
 - **Rate limit:** the shaped uplink is the dominant bottleneck.
   - At 256 kbit/s, throughput fell about 45× (Nov 10) and 187× (Nov 12) to 98.6 readings/s in both sets.
   - Freshness p95 (2,451–2,460 ms) nearly equals POST p95 (2,455–2,466 ms), so readings wait in the uplink before the API receives them. This is the Option 09 effect.
-  - Server p50 also rose, to about 485 ms. Server time can include receiving the body over the shaped link, and MongoDB was not timed separately, so a smaller database contribution can't be ruled out.
+  - Server p50 also rose, to about 485 ms. Server time can include receiving the body over the shaped link. netem shapes only the meter's uplink, so the API → MongoDB hop ran unimpaired; the extra time is on the uplink, not in the database.
 - **Delay:**
   - The added 100 ms appears in ping RTT (0.094 → 97.8 ms, Nov 10) and in POST p95 and freshness.
   - In the Nov 10 set, server p50 barely changed (17.4 → 25.2 ms).
-  - In the Nov 12 set, server p50 rose to 100.2 ms. This is consistent with the timer including body receipt over the delayed uplink, but it was not attributed to the database.
+  - In the Nov 12 set, server p50 rose to 100.2 ms, consistent with the timer including body receipt over the delayed uplink. The traced baseline MongoDB insert took 1.46 ms on the unimpaired API → DB hop (report §5.1), so the added time is network and request receipt, not database processing.
 - **Loss:**
   - iperf3 recorded 17,492 sender retransmissions (Nov 10), and every application request still succeeded.
   - The effect shows in the tail: GET p95 rose from 32.1 to 226.8 ms while GET p50 stayed near baseline.
   - In the Nov 12 set, POST p50 under loss (3.7 ms) was lower than baseline (6.2 ms). With one trial per condition in a fixed order, that difference can't be separated from run-to-run variation, so it is not read as loss improving performance.
+- **Missing data (Option 09 network test):** no readings were missing under delay, loss or throttling; every run in both sets acknowledged 5,000 of 5,000 readings with HTTP 201. Readings went missing only during the outages in §9: 5 in the DB stop and 7 in the link cut, which the client did not resend.
 - **What was not measured:**
-  - The benchmark counts acknowledged requests and readings. It does not reconcile records against MongoDB.
+  - The benchmark counts acknowledged requests and readings. It does not reconcile records against MongoDB, and it does not save the batch endpoint's per-request `db_ms`.
   - Each condition had one trial, with no confidence intervals.
   - The two sets ran on different hosts.
 
@@ -405,7 +411,7 @@ Source: `ops/results/evidence/recovery_20261112/`, report Table 10.
 | Healthcheck before / after; exit status | ALL PASS / ALL PASS; 0 | ALL PASS / ALL PASS; 0 |
 | Post-restoration client request | POST 201, GET 200 | POST 201, GET 200 |
 
-Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The client watch has no retry queue, and readings whose requests failed during the outage were not resent. The top-level `ops/results/watch_failure_*` files are copies of these Nov 12 runs.
+Most of the 12–13 s client-observed outage is the deliberate 10 s hold. Each watch request carries one reading, so 5 readings (DB) and 7 (link) were not stored; the client has no retry queue, so they were not delivered later. The top-level `ops/results/watch_failure_*` files are copies of these Nov 12 runs.
 
 ---
 
@@ -415,7 +421,7 @@ Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The cl
 |---|---|---|
 | **1. Baseline** | `./ops/impair.sh clear && ./ops/healthcheck.sh` | `bench_baseline_*.csv`, `net_baseline.txt` (Nov 10) |
 | **2. Congested** | `./ops/experiments.sh` | `bench_{delay,loss,throttle}_*.csv`, `summary.csv` (Nov 10 and Nov 12) |
-| **3. Failure + recovery** | `./ops/fail_recover.sh db` or `./ops/fail_recover.sh link` | `evidence/recovery_20261112/` (Nov 12); `ops/captures/link_failure.pcap` (Nov 10) |
+| **3. Failure + recovery** | `./ops/fail_recover.sh db` or `./ops/fail_recover.sh link` | `evidence/recovery_20261112/` (Nov 12); `ops/captures/link_failure.pcap`, `evidence/link_failure_20261110/` (Nov 10) |
 
 ---
 
@@ -460,11 +466,11 @@ These match report §9.
 
 - **Dataset:** G. Hebrail and A. Berard, *Individual Household Electric Power Consumption* [Dataset], UCI Machine Learning Repository, 2006. DOI [10.24432/C58K54](https://doi.org/10.24432/C58K54), CC BY 4.0. It is downloaded at deploy time and is git-ignored.
 - **Data:** consumption is historical household data used as a proxy, not live grid data. Generation comes from a modeled sine curve with no weather input and no measured output. The anomaly flag tests consumption power only.
-- **Security scope:** TLS authenticates the server only; there are no client certificates. The API → MongoDB hop is plaintext, and MongoDB has no authentication. The ACL covers router-forwarded traffic only and loads only with `--with-firewall` or `ops/firewall.sh on`. The private key is mode 644 and git-ignored.
-- **Measurement design:** each condition had one trial, in a fixed order, against a growing collection, with no confidence intervals. The two sets ran on different hosts. Server time is not database time, and MongoDB was not instrumented separately.
-- **Delivery guarantees:** there is no retry queue or idempotency key. Zero request errors does not mean records were reconciled against MongoDB. The single router is a single point of failure.
+- **Security scope:** TLS authenticates the server only; there are no client certificates. The API → MongoDB hop is plaintext, and MongoDB has no authentication. The ACL covers router-forwarded traffic only and loads only with `--with-firewall` or `ops/firewall.sh on`. The private key is generated locally by `deploy.sh`, git-ignored and never committed, but is left at mode 644 rather than 600.
+- **Measurement design:** each condition had one trial, in a fixed order, against a growing collection, with no confidence intervals. The two sets ran on different hosts. Server time is not database time; the benchmark did not save per-request `db_ms`, so §8 separates database from network time using the traced 1.46 ms DB exchange and the fact that only the meter uplink was impaired.
+- **Delivery guarantees:** there is no retry queue or idempotency key, so the 12 readings that failed during the two outages were lost rather than delivered late. HTTP 201 counts were not reconciled record by record against MongoDB. The single router is a single point of failure.
 - **Queries, deployment and recovery:**
-  - Latest and recent queries sort by `received_at`, which the declared `(meter_id, ts)` index does not cover.
-  - A fresh-clone deployment onto an empty volume was not re-run.
-  - The recovery script's INT/TERM cleanup was not tested.
+  - The `(meter_id, ts)` index serves lookups by measurement time; latest and recent queries sort by arrival time (`received_at`), which an additional `(meter_id, received_at)` index would serve.
+  - Deployment is one command; the verified 12 Nov run reused the existing dataset and volume, and a first run onto an empty volume was not repeated.
+  - In both recovery runs the EXIT-path cleanup ran and verified restoration (exit 0); the INT/TERM paths call the same cleanup but were not triggered.
   - An earlier stall of the recovery script was not reproduced, and its cause is unknown.

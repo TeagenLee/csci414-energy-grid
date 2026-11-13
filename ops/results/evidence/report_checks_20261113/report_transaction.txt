@@ -1,0 +1,25 @@
+$ docker exec -i meter python - < docs/report_assets/report_client.py
+REQUEST_BODY {"meter_id": "report-demo-20261112", "ts": "2026-11-13T06:20:14.049442+00:00", "sent_at": 1794550814.0494585, "global_active_power": 2.5, "voltage": 240.0, "global_intensity": 10.4, "source": "synthetic-replay"}
+BEGIN 2026-11-13T06:20:14.049504+00:00 POST /readings
+HTTP 201 {"id":"6af6ac1e1dd9bfba6656b461","freshness_ms":9.24,"anomaly":false}
+BEGIN 2026-11-13T06:20:14.086858+00:00 GET /meters/report-demo-20261112/latest
+HTTP 200 {"meter_id":"report-demo-20261112","ts":"2026-11-13T06:20:14.049442+00:00","sent_at":1794550814.0494585,"global_active_power":2.5,"global_reactive_power":0,"voltage":240.0,"global_intensity":10.4,"sub_metering_1":0,"sub_metering_2":0,"sub_metering_3":0,"source":"synthetic-replay","reading_type":"consumption","generation_kw":null,"received_at":1794550814.0586936,"freshness_ms":9.24,"anomaly":false,"id":"6af6ac1e1dd9bfba6656b461","age_s":0.033}
+BEGIN 2026-11-13T06:20:14.092845+00:00 PATCH /readings/6af6ac1e1dd9bfba6656b461
+HTTP 200 {"updated":"6af6ac1e1dd9bfba6656b461","changes":{"flagged":true,"note":"report demonstration"}}
+BEGIN 2026-11-13T06:20:14.096848+00:00 GET /meters/report-demo-20261112/latest
+HTTP 200 {"meter_id":"report-demo-20261112","ts":"2026-11-13T06:20:14.049442+00:00","sent_at":1794550814.0494585,"global_active_power":2.5,"global_reactive_power":0,"voltage":240.0,"global_intensity":10.4,"sub_metering_1":0,"sub_metering_2":0,"sub_metering_3":0,"source":"synthetic-replay","reading_type":"consumption","generation_kw":null,"received_at":1794550814.0586936,"freshness_ms":9.24,"anomaly":false,"flagged":true,"note":"report demonstration","id":"6af6ac1e1dd9bfba6656b461","age_s":0.041}
+BEGIN 2026-11-13T06:20:14.100348+00:00 POST /readings
+HTTP 422 {"detail":[{"type":"greater_than_equal","loc":["body","global_active_power"],"msg":"Input should be greater than or equal to 0","input":-5,"ctx":{"ge":0.0}},{"type":"missing","loc":["body","voltage"],"msg":"Field required","input":{"meter_id":"report-demo-20261112","ts":"2026-11-13T06:20:14.049442+00:00","sent_at":1794550814.0494585,"global_active_power":-5,"global_intensity":10.4,"source":"synthetic-replay"}}]}
+BEGIN 2026-11-13T06:20:14.103177+00:00 GET /meters/report-demo-absent-20261112/latest
+HTTP 404 {"detail":"no readings for meter report-demo-absent-20261112"}
+BEGIN 2026-11-13T06:20:14.106565+00:00 PATCH /readings/not-an-id
+HTTP 400 {"detail":"invalid reading id"}
+BEGIN 2026-11-13T06:20:14.108376+00:00 GET /meters/report-demo-20261112/readings?limit=9999
+HTTP 400 {"detail":"limit must be 1..500"}
+BEGIN 2026-11-13T06:20:14.110038+00:00 POST /readings
+HTTP 422 {"detail":[{"type":"value_error","loc":["body"],"msg":"Value error, generation_kw is required when reading_type is 'generation'","input":{"meter_id":"report-demo-20261112","ts":"2026-11-13T06:20:14.049442+00:00","sent_at":1794550814.0494585,"global_active_power":2.5,"voltage":240.0,"global_intensity":10.4,"source":"synthetic-replay","reading_type":"generation"},"ctx":{"error":{}}}]}
+BEGIN 2026-11-13T06:20:14.111453+00:00 GET /meters/report-demo-20261112/readings?reading_type=invalid
+HTTP 400 {"detail":"reading_type must be one of ['consumption', 'generation']"}
+DEMO_ASSERTIONS_PASS 6af6ac1e1dd9bfba6656b461
+
+SHELL_EXIT=0
