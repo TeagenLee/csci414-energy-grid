@@ -1,0 +1,28 @@
+14:51:50.071 BEFORE: health check
+=== result: ALL PASS ===
+14:51:52.808 starting client watch (1 request / 0.5s for 60s)
+14:52:02.832 >>> INDUCING FAILURE: link
+14:52:02.972 >>> failure command returned after 0.121s (script-measured, not yet detected by health check)
+14:52:02.983 >>> starting bounded detection loop (cap=60s)
+14:52:08.150 [fail_recover] poll #1 healthy=0 dt=5.150s
+14:52:08.166 >>> DETECTED: /health failing (script-measured: 5.316s from failure command issued to first failing probe)
+14:52:18.333 >>> RECOVERING
+14:52:18.479 >>> starting bounded recovery-verification loop (cap=60s)
+14:52:18.758 [fail_recover] poll #1 healthy=1 dt=0.261s
+14:52:18.778 >>> RECOVERED: /health passing again (script-measured: 0.417s from recovery command issued to first healthy probe)
+14:52:53.348 AFTER: health check
+=== result: ALL PASS ===
+14:52:56.084 same client request again:
+201 {'id': '6af64348daa8299914ed0444', 'freshness_ms': 6.69, 'anomaly': False}
+200 {'meter_id': 'meter-001', 'ts': '2006-12-18T20:55:00', 'sent_at': 1794523976.2484112, 'global_active_power': 3.302, 'global_reactive_power': 0.068, 'voltage': 235.24, 'global_intensity': 14.0, 'sub_metering_1': 0.0, 'sub_metering_2': 0.0, 'sub_metering_3': 17.0, 'source': 'synthetic-replay', 'received_at': 1794523976.255102, 'freshness_ms': 6.69, 'anomaly': False, 'id': '6af64348daa8299914ed0444', 'age_s': 0.014}
+
+client-observed view (meter_sim.py watch's own timeline, independent of this script's probes):
+22:52:06.015 >>> OUTAGE DETECTED
+22:52:19.100 >>> SERVICE RECOVERED after 13.1s
+watch 'failure_link' done: 96 requests, outages=['13.1s']  log -> /results/watch_failure_link.csv
+14:52:56.327 [fail_recover] cleanup (reason=EXIT, failure_injected=1)
+14:52:56.336 [fail_recover] restoring: router interface eth1 up
+14:52:56.461 [fail_recover] verifying restoration (cap=60s)...
+14:52:56.643 [fail_recover] poll #1 healthy=1 dt=0.153s
+14:52:56.655 [fail_recover] RESTORATION VERIFIED: /health reachable again
+14:52:56.666 [fail_recover] cleanup complete. final_exit_status=0

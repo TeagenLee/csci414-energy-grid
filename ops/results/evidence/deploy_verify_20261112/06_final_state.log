@@ -1,0 +1,8 @@
+=== final db record count ===
+40205
+=== container state ===
+NAME      IMAGE         COMMAND                  SERVICE   CREATED          STATUS          PORTS
+api       grid-api      "sh -c 'ip route rep…"   api       32 seconds ago   Up 31 seconds   
+db        grid-db       "docker-entrypoint.s…"   db        32 seconds ago   Up 31 seconds   27017/tcp
+meter     grid-meter    "sh -c 'ip route rep…"   meter     32 seconds ago   Up 31 seconds   
+router    grid-router   "sleep infinity"         router    32 seconds ago   Up 31 seconds   

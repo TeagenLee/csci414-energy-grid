@@ -1,0 +1,47 @@
+=== macOS ===
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+=== Docker ===
+Client: 29.3.0  Server: 29.2.1
+=== Docker Compose ===
+Docker Compose version v5.0.2
+=== bash ===
+GNU bash, version 3.2.57(1)-release (arm64-apple-darwin26)
+=== curl ===
+curl 8.7.1 (x86_64-apple-darwin26.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.69.0
+=== openssl ===
+OpenSSL 3.6.4 25 Aug 2026 (Library: OpenSSL 3.6.4 25 Aug 2026)
+=== git revision ===
+ea11df1ac1b2a87a11f9b31415da75cd96c3c4aa
+ea11df1ac1b2a87a11f9b31415da75cd96c3c4aa 2026-11-10 21:13:15 +0000 Energy Grid Telemetry Platform - CSCI 414 final (Option 9)
+=== git branch ===
+main
+=== uncommitted changes (porcelain) ===
+ M certs/api.crt
+ M ops/deploy.sh
+ M ops/fail_recover.sh
+ M ops/logs/api.log
+ M ops/results/summary.csv
+ M ops/results/watch_failure_db.csv
+ M ops/results/watch_failure_db.log
+ M ops/results/watch_failure_link.csv
+ M ops/results/watch_failure_link.log
+?? .DS_Store
+?? .cavemanrc
+?? .codex/
+?? .github/
+?? .vscode/
+?? CLAUDE.md
+?? README.md
+?? ops/.DS_Store
+?? ops/diag_fail_db.sh
+?? ops/results/bench_baseline_local_20261112_093744.csv
+?? ops/results/bench_delay_local_20261112_094000.csv
+?? ops/results/bench_loss_local_20261112_094108.csv
+?? ops/results/bench_throttle_local_20261112_094812.csv
+?? ops/results/diag_fail_db_20261112_143413.log
+?? ops/results/diag_fail_db_20261112_143853.log
+?? ops/results/evidence/
+?? ops/results/fail_recover_db_run_20261112_145133.log
+?? ops/results/fail_recover_link_run_20261112_145256.log

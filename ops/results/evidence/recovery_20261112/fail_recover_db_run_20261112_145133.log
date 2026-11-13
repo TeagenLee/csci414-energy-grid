@@ -1,0 +1,29 @@
+14:50:27.430 BEFORE: health check
+=== result: ALL PASS ===
+14:50:30.137 starting client watch (1 request / 0.5s for 60s)
+14:50:40.161 >>> INDUCING FAILURE: db
+14:50:40.418 >>> failure command returned after 0.235s (script-measured, not yet detected by health check)
+14:50:40.426 >>> starting bounded detection loop (cap=60s)
+14:50:42.641 [fail_recover] poll #1 healthy=0 dt=2.193s
+14:50:42.660 >>> DETECTED: /health failing (script-measured: 2.476s from failure command issued to first failing probe)
+api  | 2026-11-12 22:50:42.509 ERROR HEALTH FAIL: db unreachable (ServerSelectionTimeoutError)
+14:50:52.842 >>> RECOVERING
+14:50:53.090 >>> starting bounded recovery-verification loop (cap=60s)
+14:50:54.372 [fail_recover] poll #1 healthy=1 dt=1.263s
+14:50:54.388 >>> RECOVERED: /health passing again (script-measured: 1.529s from recovery command issued to first healthy probe)
+14:51:30.659 AFTER: health check
+=== result: ALL PASS ===
+14:51:33.519 same client request again:
+201 {'id': '6af642f5daa8299914ed03ea', 'freshness_ms': 5.99, 'anomaly': False}
+200 {'meter_id': 'meter-001', 'ts': '2006-12-17T21:49:00', 'sent_at': 1794523893.6787446, 'global_active_power': 2.97, 'global_reactive_power': 0.144, 'voltage': 238.17, 'global_intensity': 12.4, 'sub_metering_1': 0.0, 'sub_metering_2': 1.0, 'sub_metering_3': 17.0, 'source': 'synthetic-replay', 'received_at': 1794523893.684736, 'freshness_ms': 5.99, 'anomaly': False, 'id': '6af642f5daa8299914ed03ea', 'age_s': 0.015}
+
+client-observed view (meter_sim.py watch's own timeline, independent of this script's probes):
+22:50:42.378 >>> OUTAGE DETECTED
+22:50:54.318 >>> SERVICE RECOVERED after 11.9s
+watch 'failure_db' done: 98 requests, outages=['11.9s']  log -> /results/watch_failure_db.csv
+14:51:33.750 [fail_recover] cleanup (reason=EXIT, failure_injected=1)
+14:51:33.780 [fail_recover] db already running
+14:51:33.789 [fail_recover] verifying restoration (cap=60s)...
+14:51:33.936 [fail_recover] poll #1 healthy=1 dt=0.127s
+14:51:33.951 [fail_recover] RESTORATION VERIFIED: /health reachable again
+14:51:33.960 [fail_recover] cleanup complete. final_exit_status=0

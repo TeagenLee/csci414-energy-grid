@@ -4,8 +4,9 @@
   python meter_sim.py bench --label baseline     -> identical repeatable workload, saves CSV + summary
   python meter_sim.py watch --label x --duration 60  -> 1 reading every 0.5s, logs up/down timeline
   python meter_sim.py errors                     -> shows error responses (422/404/400)
+  python meter_sim.py generate --meter pv-001 --hour 13.5  -> one synthetic generation reading
 """
-import argparse, csv, os, random, statistics, sys, threading, time
+import argparse, csv, math, os, random, statistics, sys, threading, time
 from datetime import datetime
 import requests
 
@@ -51,6 +52,55 @@ def make_reading(meter_id, i):
     }
 
 
+# Generation is explicitly simulated, not relabeled consumption data: the UCI
+# dataset has no generation column, so generation_kw comes from a documented
+# synthetic model rather than copying any of the fields above. Model: a
+# clear-sky PV-like curve, zero before 6:00 and after 18:00, peaking at a
+# configurable capacity at solar noon (hour 12), shaped by a half-cosine over
+# the daylight window. This is explicitly an illustrative simulation, not a
+# weather- or irradiance-calibrated forecast.
+GEN_CAPACITY_KW = float(os.getenv("GEN_CAPACITY_KW", "5.0"))   # nameplate PV capacity, kW
+GEN_SUNRISE_HOUR = 6.0
+GEN_SUNSET_HOUR = 18.0
+
+
+def solar_kw(hour_of_day: float, capacity_kw: float = GEN_CAPACITY_KW) -> float:
+    if hour_of_day <= GEN_SUNRISE_HOUR or hour_of_day >= GEN_SUNSET_HOUR:
+        return 0.0
+    span = GEN_SUNSET_HOUR - GEN_SUNRISE_HOUR
+    phase = (hour_of_day - GEN_SUNRISE_HOUR) / span      # 0..1 across the daylight window
+    shape = math.sin(phase * math.pi)                    # 0 at sunrise/sunset, 1 at noon
+    return round(capacity_kw * shape, 3)
+
+
+def make_generation_reading(meter_id, i, hour_of_day=None):
+    p = ROWS[i % len(ROWS)]                   # reuse the dataset's own timestamps for ts/i cadence
+    ts = datetime.strptime(f"{p[0]} {p[1]}", "%d/%m/%Y %H:%M:%S")
+    if hour_of_day is not None:
+        # override ts's time-of-day to match the requested hour, keeping the
+        # dataset row's date, so the stored/returned ts and the generation
+        # value it was computed from always agree with each other
+        h = int(hour_of_day) % 24
+        m = int(round((hour_of_day - int(hour_of_day)) * 60)) % 60
+        ts = ts.replace(hour=h, minute=m, second=0, microsecond=0)
+        hour = hour_of_day
+    else:
+        hour = ts.hour + ts.minute / 60.0
+    return {
+        "meter_id": meter_id, "ts": ts.isoformat(), "sent_at": time.time(),
+        # global_active_power/voltage/global_intensity are schema-required
+        # fields carried over unchanged from the dataset row for this
+        # timestamp; they describe consumption at the same instant, not the
+        # generation value itself, which is reported separately below.
+        "global_active_power": float(p[2]), "global_reactive_power": float(p[3]),
+        "voltage": float(p[4]), "global_intensity": float(p[5]),
+        "sub_metering_1": float(p[6]), "sub_metering_2": float(p[7]),
+        "sub_metering_3": float(p[8]), "source": "synthetic-replay",
+        "reading_type": "generation",
+        "generation_kw": solar_kw(hour),
+    }
+
+
 def session():
     s = requests.Session()
     s.verify = CA
@@ -76,6 +126,19 @@ def cmd_send(a):
     if rid:
         r3 = session().patch(f"{API}/readings/{rid}", json={"flagged": True, "note": "checked by operator"}, timeout=TIMEOUT)
         print(r3.status_code, r3.json())
+
+
+# ---------------------------------------------------------------- generate
+def cmd_generate(a):
+    reading = make_generation_reading(a.meter, random.randint(0, 4999), hour_of_day=a.hour)
+    print(f"synthetic generation model: clear-sky half-cosine, capacity={GEN_CAPACITY_KW}kW, "
+          f"daylight {GEN_SUNRISE_HOUR:.0f}:00-{GEN_SUNSET_HOUR:.0f}:00, hour_of_day={reading['ts'][11:16]}")
+    r = session().post(f"{API}/readings", json=reading, timeout=TIMEOUT)
+    print("POST", r.status_code, r.json())
+    r2 = session().get(f"{API}/meters/{a.meter}/latest", timeout=TIMEOUT)
+    print("GET latest", r2.status_code, r2.json())
+    r3 = session().get(f"{API}/meters/{a.meter}/readings?reading_type=generation&limit=5", timeout=TIMEOUT)
+    print("GET readings?reading_type=generation", r3.status_code, r3.json())
 
 
 # ---------------------------------------------------------------- bench
@@ -219,4 +282,9 @@ x.add_argument("--batch-size", type=int, default=50); x.set_defaults(f=cmd_bench
 x = sub.add_parser("watch"); x.add_argument("--label", required=True)
 x.add_argument("--duration", type=int, default=60); x.set_defaults(f=cmd_watch)
 x = sub.add_parser("errors"); x.set_defaults(f=cmd_errors)
+x = sub.add_parser("generate"); x.add_argument("--meter", default="pv-001")
+x.add_argument("--hour", type=float, default=None,
+                help="hour of day 0-24 (e.g. 13.5 = 13:30) for the synthetic solar curve; "
+                     "defaults to the replayed dataset row's own time of day")
+x.set_defaults(f=cmd_generate)
 a = p.parse_args(); a.f(a)
