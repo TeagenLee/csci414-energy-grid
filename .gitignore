@@ -2,7 +2,6 @@ data/
 certs/*.key
 __pycache__/
 .DS_Store
-docs/
 
 # Local agent/editor state; not part of the submission.
 .codegraph/

@@ -20,6 +20,7 @@ BUILD  →  PROTECT  →  MEASURE  →  RECOVER
 ### Report and evidence
 
 - **Final report:** [`docs/CSCI414_Energy_Grid_Final_Report.docx`](docs/CSCI414_Energy_Grid_Final_Report.docx). The numbers and labels below match the report. Its Appendix C indexes the evidence for every claim; entries under `docs/report_assets/` refer to report-check files that are summarized in the report but not included in this repository.
+- **Presentation slides:** [`docs/Energy Grid Telemetry Platform.pptx`](<docs/Energy Grid Telemetry Platform.pptx>), 12 slides covering Modules A–F, the throttled-link experiment, limitations and lessons learned.
 - **Evidence folders:**
   - [`ops/results/`](ops/results/): benchmark CSVs, `summary.csv`, ping and iperf3 output, recovery consoles
   - [`ops/results/evidence/`](ops/results/evidence/): the Nov 12 recovery runs, the secure redeployment and the generation feature
@@ -429,7 +430,7 @@ Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The cl
 ├── router/                   # router image + firewall.nft
 ├── certs/                    # api.crt; api.key is generated and git-ignored
 ├── data/                     # UCI dataset, downloaded by deploy.sh (git-ignored)
-├── docs/                     # final report (.docx)
+├── docs/                     # final report (.docx) + presentation slides (.pptx)
 └── ops/
     ├── *.sh                  # deploy, healthcheck, firewall, impair, experiments, capture, fail_recover
     ├── captures/             # Nov 10 pcaps: normal_txn, deny_test, link_failure
@@ -449,7 +450,7 @@ Most of the 12–13 s client-observed outage is the deliberate 10 s hold. The cl
 | Observability & packet evidence | §7; report §5, Appendix A |
 | Performance experiments | §8; report §6 |
 | Automation & recovery | §9; report §7 |
-| Documentation & demonstration | This README, final report, slides, demo video (submitted separately) |
+| Documentation & demonstration | This README, final report and slides (`docs/`), demo video (submitted separately) |
 
 ---
 
