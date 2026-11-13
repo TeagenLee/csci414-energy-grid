@@ -19,7 +19,7 @@ BUILD  →  PROTECT  →  MEASURE  →  RECOVER
 
 ### Report and evidence
 
-- **Final report:** [`docs/CSCI414_Energy_Grid_Final_Report.docx`](docs/CSCI414_Energy_Grid_Final_Report.docx). The numbers and labels below match the report. Its Appendix C indexes the evidence for every claim; entries under `docs/report_assets/` refer to report-check files that are summarized in the report but not included in this repository.
+- **Final report:** [`docs/CSCI414_Energy_Grid_Final_Report.docx`](docs/CSCI414_Energy_Grid_Final_Report.docx). The numbers and labels below match the report. Its Appendix C indexes the evidence for every claim, pointing to files in this repository or to the report's own figures, listings and tables.
 - **Presentation slides:** [`docs/Energy Grid Telemetry Platform.pptx`](<docs/Energy Grid Telemetry Platform.pptx>), 12 slides covering Modules A–F, the throttled-link experiment, limitations and lessons learned.
 - **Evidence folders:**
   - [`ops/results/`](ops/results/): benchmark CSVs, `summary.csv`, ping and iperf3 output, recovery consoles
